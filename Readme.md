@@ -1,9 +1,18 @@
-# NativeBase Expo Template
 
-The official NativeBase template for [Expo](https://docs.expo.io/)
+# Memory Game
+It is a mobile application developed for iOS and Android mobile phones.
 
-## Usage
+## To start the project 
+``` 
+yarn start
+```
 
-```sh
-expo init my-app --template @native-base/expo-template
+## To install the project on iOS Simulator 
+``` 
+yarn ios
+```
+
+## To install the project on Android Emulator 
+``` 
+yarn android
 ```
