@@ -4,6 +4,12 @@ import * as ScreenOrientation from "expo-screen-orientation";
 let initialState = {
   orientation: ScreenOrientation.Orientation.PORTRAIT_UP,
   loading: false,
+  toast: {
+    visible: true,
+    title: null,
+    status: null,
+    description: null,
+  },
 };
 
 const slice = createSlice({
@@ -11,12 +17,17 @@ const slice = createSlice({
   initialState: initialState,
   reducers: {
     setOrientation(state, action) {
-      console.log("state.orientation", action.payload.orientation);
       state.orientation =
         action.payload.orientation !== 4 ? "PORTRAIT" : "LANDSCAPE";
     },
     setLoading(state, action) {
       state.loading = action.payload.loading;
+    },
+    showToast(state, action) {
+      state.toast = { ...action.payload.toast };
+    },
+    closeToast(state) {
+      state.toast = { ...initialState.toast };
     },
   },
 });

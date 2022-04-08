@@ -1,17 +1,16 @@
 import React, { useEffect } from "react";
-import { Box, ZStack, Text, View } from "native-base";
+import { Box, Spinner } from "native-base";
 import {
   Platform,
   Keyboard,
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
   StyleSheet,
-  ActivityIndicator,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useDispatch, useSelector } from "react-redux";
 import * as ScreenOrientation from "expo-screen-orientation";
-import { uiActions } from "../../store/slices/ui";
+import { uiActions } from "../../../store/slices/ui";
 export default function AppContainer({ children, keyboardAvoiding = false }) {
   const dispatch = useDispatch();
   ScreenOrientation.unlockAsync();
@@ -66,6 +65,21 @@ export default function AppContainer({ children, keyboardAvoiding = false }) {
           }}
         >
           {children}
+          {loading && (
+            <Box
+              bg="black"
+              flex="1"
+              style={{
+                position: "absolute",
+                height: "100%",
+                width: "100%",
+                opacity: 0.1,
+              }}
+              justifyContent="center"
+            >
+              <Spinner color="white" size="lg" />
+            </Box>
+          )}
         </Box>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>

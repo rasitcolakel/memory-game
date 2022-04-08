@@ -1,22 +1,16 @@
 import React from "react";
 import { NativeBaseProvider, extendTheme } from "native-base";
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Login from "./components/screens/Auth/Login";
-import Home from "./components/screens/Home";
-import SignUp from "./components/screens/Auth/SignUp";
 import { LinearGradient } from "expo-linear-gradient";
 import { LogBox } from "react-native";
 import { Provider } from "react-redux";
 import store from "./store";
-
+import Amplify from "aws-amplify";
+import awsconfig from "./src/aws-exports";
+import Navigator from "./src/Navigator";
 LogBox.ignoreLogs([
   "NativeBase:",
   "Remote debugger is in a background tab which may cause apps to perform slowly. Fix this by foregrounding the tab (or opening it in a separate window).",
 ]);
-
-// Define the stack navigator
-const Stack = createNativeStackNavigator();
 
 // Define the config
 const config = {
@@ -27,6 +21,7 @@ const config = {
   },
 };
 
+Amplify.configure(awsconfig);
 // extend the theme
 export const theme = extendTheme({
   colors: {
@@ -45,26 +40,13 @@ export const theme = extendTheme({
     },
   },
 });
-export default function App() {
+function App() {
   return (
     <Provider store={store}>
       <NativeBaseProvider config={config} theme={theme}>
-        <NavigationContainer>
-          <Stack.Navigator>
-            <Stack.Screen
-              name="Login"
-              component={Login}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="SignUp"
-              component={SignUp}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen name="Home" component={Home} />
-          </Stack.Navigator>
-        </NavigationContainer>
+        <Navigator />
       </NativeBaseProvider>
     </Provider>
   );
 }
+export default App;

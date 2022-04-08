@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 
 export default function AuthCard({ children }) {
   const { orientation } = useSelector((state) => state.ui);
-  console.log(orientation);
+
   return (
     <AppContainer keyboardAvoiding={false}>
       <ScrollView
