@@ -8,28 +8,18 @@ import {
   StyleSheet,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import * as ScreenOrientation from "expo-screen-orientation";
-import { uiActions } from "../../../store/slices/ui";
 export default function AppContainer({ children, keyboardAvoiding = false }) {
-  const dispatch = useDispatch();
   ScreenOrientation.unlockAsync();
   const { loading } = useSelector((state) => state.ui);
   useEffect(() => {
-    ScreenOrientation.getOrientationAsync().then((info) => {
-      dispatch(
-        uiActions.setOrientation({
-          orientation: info,
-        })
-      );
+    ScreenOrientation.getOrientationAsync().then(async (info) => {
+      await changeScreenOrientation();
     });
     const subscription = ScreenOrientation.addOrientationChangeListener(
-      (evt) => {
-        dispatch(
-          uiActions.setOrientation({
-            orientation: evt.orientationInfo.orientation,
-          })
-        );
+      async (evt) => {
+        await changeScreenOrientation();
       }
     );
 
@@ -37,13 +27,31 @@ export default function AppContainer({ children, keyboardAvoiding = false }) {
       ScreenOrientation.removeOrientationChangeListener(subscription);
     };
   }, []);
+  async function changeScreenOrientation() {
+    await ScreenOrientation.lockAsync(
+      ScreenOrientation.OrientationLock.LANDSCAPE_LEFT
+    );
+  }
+
+  function KeyboardAvoiding({ children }) {
+    if (keyboardAvoiding) {
+      return (
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{ flex: 1 }}
+        >
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            {children}
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
+      );
+    }
+    return children;
+  }
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={{ flex: 1 }}
-    >
+    <>
       <StatusBar style="light" translucent={true} />
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <KeyboardAvoiding>
         <Box
           style={{
             flex: 1,
@@ -81,8 +89,8 @@ export default function AppContainer({ children, keyboardAvoiding = false }) {
             </Box>
           )}
         </Box>
-      </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+      </KeyboardAvoiding>
+    </>
   );
 }
 

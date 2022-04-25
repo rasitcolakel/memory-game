@@ -1,0 +1,119 @@
+type User
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      {
+        allow: groups
+        groups: ["Admins"]
+        operations: [create, update, read, delete]
+      }
+      { allow: groups, groups: ["Users"], operations: [read] }
+    ]
+  ) {
+  id: ID!
+  name: String!
+  email: String!
+  username: String!
+  isNotificationsAccepted: Boolean @default(value: "false")
+}
+
+type Notifications
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      {
+        allow: groups
+        groups: ["Admins"]
+        operations: [create, update, read, delete]
+      }
+      { allow: groups, groups: ["Users"], operations: [read] }
+    ]
+  ) {
+  id: ID!
+  senderID: ID!
+  sender: User @hasOne(fields: ["senderID"])
+  receiverID: ID!
+  receiver: User @hasOne(fields: ["receiverID"])
+}
+
+type Collections
+  @model
+  @auth(
+    rules: [
+      {
+        allow: groups
+        groups: ["Admins"]
+        operations: [create, update, read, delete]
+      }
+      { allow: groups, groups: ["Users"], operations: [read] }
+    ]
+  ) {
+  id: ID!
+  title: String!
+  images: [Image] @manyToMany(relationName: "ImageCollections")
+  userID: ID!
+  user: User @hasOne(fields: ["userID"])
+}
+
+type Image
+  @model
+  @auth(
+    rules: [
+      {
+        allow: groups
+        groups: ["Admins"]
+        operations: [create, update, read, delete]
+      }
+      { allow: groups, groups: ["Users"], operations: [read] }
+    ]
+  ) {
+  id: ID!
+  url: String!
+  collections: [Collections] @manyToMany(relationName: "ImageCollections")
+  userID: ID!
+  user: User @hasOne(fields: ["userID"])
+}
+
+type Levels
+  @model
+  @searchable
+  @auth(
+    rules: [
+      {
+        allow: groups
+        groups: ["Admins"]
+        operations: [create, update, read, delete]
+      }
+      { allow: groups, groups: ["Users"], operations: [read] }
+    ]
+  ) {
+  id: ID!
+  number: Int
+  gameRules: AWSJSON
+  userID: ID!
+  user: User @hasOne(fields: ["userID"])
+}
+
+type PushToken
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      {
+        allow: groups
+        groups: ["Admins"]
+        operations: [create, update, read, delete]
+      }
+      {
+        allow: groups
+        groups: ["Users"]
+        operations: [create, update, read, delete]
+      }
+    ]
+  ) {
+  pushToken: String!
+  userID: ID! @primaryKey
+  user: User @hasOne(fields: ["userID"])
+}

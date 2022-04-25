@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "serviceConfiguration": {
+    "apiName": "MemoryGameGraphQL",
+    "serviceName": "AppSync",
+    "gqlSchemaPath": "/Users/rasitcolakel/Desktop/Ben/Graduation/memory-game-panel/amplify/backend/api/MemoryGameGraphQL/schema.graphql",
+    "defaultAuthType": {
+      "mode": "AMAZON_COGNITO_USER_POOLS",
+      "cognitoUserPoolId": "authMemoryGame"
+    },
+    "additionalAuthTypes": [
+      {
+        "mode": "API_KEY",
+        "expirationTime": 365,
+        "apiKeyExpirationDate": "2023-04-12T23:01:37.720Z",
+        "keyDescription": "public access"
+      },
+      {
+        "mode": "AWS_IAM"
+      }
+    ],
+    "conflictResolution": {}
+  }
+}

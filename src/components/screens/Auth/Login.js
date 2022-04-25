@@ -19,7 +19,7 @@ export default function Login({ navigation }) {
     },
   });
   const loginPressed = async (data) => {
-    dispatch(login(data));
+    dispatch(login(data, navigation));
   };
 
   return (
@@ -31,6 +31,7 @@ export default function Login({ navigation }) {
         control={control}
         inputProps={{
           placeholder: "Username",
+          autoCapitalize: "none",
         }}
         name="username"
         rules={{
@@ -48,6 +49,7 @@ export default function Login({ navigation }) {
         inputProps={{
           placeholder: "Password",
           type: "password",
+          autoCapitalize: "none",
         }}
         name="password"
         rules={{

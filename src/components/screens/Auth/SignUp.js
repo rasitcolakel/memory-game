@@ -14,7 +14,7 @@ export default function Login({ navigation }) {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      name: "ras",
+      name: "rast",
       email: "rasitcolakel@hotmail.com",
       username: "raseke",
       password: "12345678",
@@ -34,6 +34,7 @@ export default function Login({ navigation }) {
         control={control}
         inputProps={{
           placeholder: "Full Name",
+          autoCapitalize: "none",
         }}
         name="name"
         rules={{
@@ -51,6 +52,7 @@ export default function Login({ navigation }) {
         inputProps={{
           placeholder: "E-mail Adress",
           type: "email",
+          autoCapitalize: "none",
         }}
         name="email"
         rules={{
@@ -67,6 +69,7 @@ export default function Login({ navigation }) {
         control={control}
         inputProps={{
           placeholder: "Username",
+          autoCapitalize: "none",
         }}
         name="username"
         rules={{
@@ -84,6 +87,7 @@ export default function Login({ navigation }) {
         inputProps={{
           placeholder: "Password",
           type: "password",
+          autoCapitalize: "none",
         }}
         name="password"
         rules={{
@@ -101,6 +105,7 @@ export default function Login({ navigation }) {
         inputProps={{
           placeholder: "Confirm Password",
           type: "password",
+          autoCapitalize: "none",
         }}
         name="confirmPassword"
         rules={{
@@ -118,7 +123,7 @@ export default function Login({ navigation }) {
       </Button>
       <Button
         variant="link"
-        onPress={() => navigation.navigate("EmailConfirmation")}
+        onPress={() => navigation.navigate("Login")}
         my="2"
       >
         Do you have an account? Sign In

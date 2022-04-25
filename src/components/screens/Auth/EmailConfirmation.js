@@ -21,7 +21,9 @@ export default function Login({ navigation }) {
     },
   });
   const confirmPressed = async (data) => {
-    dispatch(confirmSignUp(data, navigation));
+    dispatch(
+      confirmSignUp({ ...data, password: route?.params?.password }, navigation)
+    );
   };
   const resendPressed = async () => {
     dispatch(resendSignUp({ username: route?.params?.username }));

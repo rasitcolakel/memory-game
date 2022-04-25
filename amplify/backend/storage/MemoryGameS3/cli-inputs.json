@@ -1,0 +1,15 @@
+{
+  "resourceName": "MemoryGameS3",
+  "policyUUID": "9333f33c",
+  "bucketName": "memorygamebucket",
+  "storageAccess": "authAndGuest",
+  "guestAccess": [
+    "READ"
+  ],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "groupAccess": {}
+}

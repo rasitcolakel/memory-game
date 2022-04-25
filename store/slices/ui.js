@@ -1,8 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
-import * as ScreenOrientation from "expo-screen-orientation";
 
 let initialState = {
-  orientation: ScreenOrientation.Orientation.PORTRAIT_UP,
+  orientation: "LANDSCAPE",
   loading: false,
   toast: {
     visible: true,

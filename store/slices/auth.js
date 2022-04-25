@@ -5,6 +5,7 @@ let initialState = {
   token: null,
   user: null,
   isLogged: null,
+  pushToken: null,
 };
 
 const slice = createSlice({
@@ -20,10 +21,12 @@ const slice = createSlice({
       state.isLogged = action.payload.isLogged;
     },
     signOut(state) {
-      console.log("signOut called");
       state.user = null;
       state.isLogged = false;
       state.token = null;
+    },
+    setPushToken(state, action) {
+      state.pushToken = action.payload.pushToken;
     },
   },
 });

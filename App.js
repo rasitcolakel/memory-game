@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { NativeBaseProvider, extendTheme } from "native-base";
 import { LinearGradient } from "expo-linear-gradient";
 import { LogBox } from "react-native";
@@ -6,12 +6,14 @@ import { Provider } from "react-redux";
 import store from "./store";
 import Amplify from "aws-amplify";
 import awsconfig from "./src/aws-exports";
-import Navigator from "./src/Navigator";
+import Navigator from "./src/Navigator/Navigator";
+import { openDatabase } from "./store/database";
+import { cacheAllImages } from "./store/database/images";
 LogBox.ignoreLogs([
   "NativeBase:",
   "Remote debugger is in a background tab which may cause apps to perform slowly. Fix this by foregrounding the tab (or opening it in a separate window).",
 ]);
-
+const db = openDatabase();
 // Define the config
 const config = {
   useSystemColorMode: false,
@@ -41,6 +43,9 @@ export const theme = extendTheme({
   },
 });
 function App() {
+  useEffect(() => {
+    cacheAllImages(db);
+  }, []);
   return (
     <Provider store={store}>
       <NativeBaseProvider config={config} theme={theme}>
@@ -49,4 +54,5 @@ function App() {
     </Provider>
   );
 }
+
 export default App;

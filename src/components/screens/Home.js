@@ -1,18 +1,33 @@
-import { Button, View } from "native-base";
 import React from "react";
-import FlipCard from "../UI/FlipCard";
-import { StatusBar } from "react-native";
+import { ScrollView, Text } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import AppContainer from "../UI/AppContainer";
-import { signOut } from "../../../store/actions/auth";
+import { getLevels } from "../../../store/actions/levels";
+import { getImages } from "../../../store/actions/image";
+import { StatusBar } from "native-base";
+import LevelCard from "../UI/LevelCard";
+import { openDatabase } from "../../../store/database";
+const db = openDatabase();
 export default function Home() {
   const { orientation } = useSelector((state) => state.ui);
   const dispatch = useDispatch();
+  const { data, nextToken, loading } = useSelector(
+    (state) => state.contents.levels
+  );
+
+  React.useEffect(() => {
+    dispatch(getImages(true));
+    if (data) return;
+    dispatch(getLevels(true));
+  }, []);
+  const loadMore = () => {
+    dispatch(getLevels());
+  };
+
   return (
     <AppContainer>
-      <View
-        style={{
-          height: "100%",
+      <ScrollView
+        contentContainerStyle={{
           flex: 1,
           flexWrap: "wrap",
           flexDirection: "row",
@@ -20,65 +35,9 @@ export default function Home() {
           justifyContent: "center",
           paddingTop: StatusBar.currentHeight || 0,
         }}
-        p="2"
       >
-        <Button onPress={() => dispatch(signOut())}>123123</Button>
-        <FlipCard
-          width={orientation === "LANDSCAPE" ? `${33.3 / 2}%` : "33.3%"}
-        />
-        <FlipCard
-          width={orientation === "LANDSCAPE" ? `${33.3 / 2}%` : "33.3%"}
-        />
-        <FlipCard
-          width={orientation === "LANDSCAPE" ? `${33.3 / 2}%` : "33.3%"}
-        />
-        <FlipCard
-          width={orientation === "LANDSCAPE" ? `${33.3 / 2}%` : "33.3%"}
-        />
-        <FlipCard
-          width={orientation === "LANDSCAPE" ? `${33.3 / 2}%` : "33.3%"}
-        />
-        <FlipCard
-          width={orientation === "LANDSCAPE" ? `${33.3 / 2}%` : "33.3%"}
-        />
-
-        <FlipCard
-          width={orientation === "LANDSCAPE" ? `${33.3 / 2}%` : "33.3%"}
-        />
-        <FlipCard
-          width={orientation === "LANDSCAPE" ? `${33.3 / 2}%` : "33.3%"}
-        />
-        <FlipCard
-          width={orientation === "LANDSCAPE" ? `${33.3 / 2}%` : "33.3%"}
-        />
-        <FlipCard
-          width={orientation === "LANDSCAPE" ? `${33.3 / 2}%` : "33.3%"}
-        />
-        <FlipCard
-          width={orientation === "LANDSCAPE" ? `${33.3 / 2}%` : "33.3%"}
-        />
-        <FlipCard
-          width={orientation === "LANDSCAPE" ? `${33.3 / 2}%` : "33.3%"}
-        />
-        <FlipCard
-          width={orientation === "LANDSCAPE" ? `${33.3 / 2}%` : "33.3%"}
-        />
-        <FlipCard
-          width={orientation === "LANDSCAPE" ? `${33.3 / 2}%` : "33.3%"}
-        />
-        <FlipCard
-          width={orientation === "LANDSCAPE" ? `${33.3 / 2}%` : "33.3%"}
-        />
-        <FlipCard
-          width={orientation === "LANDSCAPE" ? `${33.3 / 2}%` : "33.3%"}
-        />
-        <FlipCard
-          width={orientation === "LANDSCAPE" ? `${33.3 / 2}%` : "33.3%"}
-        />
-        <FlipCard
-          width={orientation === "LANDSCAPE" ? `${33.3 / 2}%` : "33.3%"}
-        />
-      </View>
+        {data && data.map((item) => <LevelCard level={item} key={item.id} />)}
+      </ScrollView>
     </AppContainer>
   );
 }

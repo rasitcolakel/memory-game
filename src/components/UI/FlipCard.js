@@ -1,48 +1,31 @@
-import Animated, {
-  FlipInXDown,
-  FlipInXUp,
-  FlipOutXDown,
-  FlipOutXUp,
-  Keyframe,
-} from "react-native-reanimated";
-import React, { useState } from "react";
-import { Pressable, Text, View } from "native-base";
+import Animated, { StretchOutY } from "react-native-reanimated";
+import React from "react";
+import { Box, Image, Pressable, Text } from "native-base";
 
-export default function FlipCard({ width }) {
-  const [show, setShow] = useState(false);
-  const [firstFlip, setFirstFlip] = useState(true);
-  const keyframe = new Keyframe({
-    0: {
-      transform: [{ rotate: "0deg" }],
-    },
-    25: {
-      transform: [{ rotate: "10deg" }],
-    },
-    50: {
-      transform: [{ rotate: "0deg" }],
-    },
-    75: {
-      transform: [{ rotate: "-10deg" }],
-    },
-    100: {
-      transform: [{ rotate: "0deg" }],
-    },
-  }).duration(400);
-  const frontEntering = !firstFlip ? FlipInXDown.duration(500) : keyframe;
+export const FlipCard = ({
+  size = 150,
+  card,
+  selectCard,
+  firstFlip,
+  show,
+  frontEntering,
+}) => {
   React.useEffect(() => {
-    setTimeout(() => {
-      setShow(true);
-      setFirstFlip(false);
-    }, 3000);
+    console.log("useEffect", card.id);
   }, []);
   return (
-    <View width={width} p={2}>
-      {show && (
+    <Box
+      style={{
+        height: size,
+        width: size,
+      }}
+    >
+      {!show && (
         <Animated.View
-          entering={FlipInXUp}
-          exiting={FlipOutXUp}
+          entering={frontEntering}
+          exiting={StretchOutY}
           style={{
-            width: "100%",
+            width: size,
             aspectRatio: 1,
             alignItems: "center",
             justifyContent: "center",
@@ -50,17 +33,20 @@ export default function FlipCard({ width }) {
         >
           <Pressable
             style={{
-              height: "100%",
-              width: "100%",
+              height: size,
+              width: size,
             }}
             flex={1}
             alignItems="center"
             justifyContent="center"
             onPress={() => {
-              setShow(!show);
+              selectCard(card);
             }}
-            bg={"amber.500"}
-            disabled={firstFlip}
+            bg={"blue.500"}
+            disabled={firstFlip || show}
+            borderWidth="4"
+            borderRadius="3xl"
+            borderColor="amber.400"
           >
             <Text color={"white"} fontSize="6xl">
               ?
@@ -69,12 +55,12 @@ export default function FlipCard({ width }) {
         </Animated.View>
       )}
 
-      {!show && (
+      {show && (
         <Animated.View
           entering={frontEntering}
-          exiting={FlipOutXDown}
+          exiting={StretchOutY}
           style={{
-            width: "100%",
+            width: size,
             aspectRatio: 1,
             alignItems: "center",
             justifyContent: "center",
@@ -82,19 +68,30 @@ export default function FlipCard({ width }) {
         >
           <Pressable
             style={{
-              height: "100%",
-              width: "100%",
+              height: size,
+              width: size,
             }}
             onPress={() => {
-              setShow(!show);
+              selectCard(card);
             }}
-            bg={"amber.700"}
-            disabled={firstFlip}
+            bg={"blue.700"}
+            disabled={firstFlip || show}
+            alignItems="center"
+            justifyContent="center"
+            borderWidth="4"
+            borderRadius="3xl"
+            borderColor="amber.400"
           >
-            <Text>Front</Text>
+            <Image
+              src={card.file}
+              alt={"test"}
+              width="90%"
+              height={"90%"}
+              key={card.id}
+            />
           </Pressable>
         </Animated.View>
       )}
-    </View>
+    </Box>
   );
-}
+};
