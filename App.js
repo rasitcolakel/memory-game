@@ -8,7 +8,9 @@ import Amplify from "aws-amplify";
 import awsconfig from "./src/aws-exports";
 import Navigator from "./src/Navigator/Navigator";
 import { openDatabase } from "./store/database";
-import { cacheAllImages } from "./store/database/images";
+import * as Updates from "expo-updates";
+import { setStatusBarHidden } from "expo-status-bar";
+
 LogBox.ignoreLogs([
   "NativeBase:",
   "Remote debugger is in a background tab which may cause apps to perform slowly. Fix this by foregrounding the tab (or opening it in a separate window).",
@@ -42,10 +44,42 @@ export const theme = extendTheme({
     },
   },
 });
+
 function App() {
   useEffect(() => {
-    cacheAllImages(db);
+    setStatusBarHidden(true);
+    checkUpdates();
   }, []);
+
+  // Check the OTA (On the Air) Updates
+  const checkUpdates = () => {
+    if (!__DEV__) {
+      Updates.checkForUpdateAsync().then(({ isAvailable }) => {
+        if (!isAvailable) {
+        } else {
+          Updates.fetchUpdateAsync()
+            .then(({ isNew }) => {
+              Alert.alert(
+                "New Update",
+                "Please Update Your App By Clicking Ok",
+                [
+                  {
+                    text: "Cancel",
+                    onPress: () => Alert.alert("Cancel Pressed"),
+                    style: "cancel",
+                  },
+                  {
+                    text: "Ok",
+                    onPress: () => Updates.reloadAsync(),
+                  },
+                ]
+              );
+            })
+            .catch((e) => {});
+        }
+      });
+    }
+  };
   return (
     <Provider store={store}>
       <NativeBaseProvider config={config} theme={theme}>

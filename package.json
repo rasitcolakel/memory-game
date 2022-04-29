@@ -28,6 +28,7 @@
     "aws-amplify-react-native": "^6.0.4",
     "aws-sdk": "^2.1111.0",
     "expo": "^44.0.0",
+    "expo-av": "~10.2.0",
     "expo-file-system": "~13.1.4",
     "expo-linear-gradient": "~11.0.3",
     "expo-notifications": "~0.14.0",

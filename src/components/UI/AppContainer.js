@@ -9,29 +9,8 @@ import {
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useSelector } from "react-redux";
-import * as ScreenOrientation from "expo-screen-orientation";
 export default function AppContainer({ children, keyboardAvoiding = false }) {
-  ScreenOrientation.unlockAsync();
   const { loading } = useSelector((state) => state.ui);
-  useEffect(() => {
-    ScreenOrientation.getOrientationAsync().then(async (info) => {
-      await changeScreenOrientation();
-    });
-    const subscription = ScreenOrientation.addOrientationChangeListener(
-      async (evt) => {
-        await changeScreenOrientation();
-      }
-    );
-
-    return () => {
-      ScreenOrientation.removeOrientationChangeListener(subscription);
-    };
-  }, []);
-  async function changeScreenOrientation() {
-    await ScreenOrientation.lockAsync(
-      ScreenOrientation.OrientationLock.LANDSCAPE_LEFT
-    );
-  }
 
   function KeyboardAvoiding({ children }) {
     if (keyboardAvoiding) {

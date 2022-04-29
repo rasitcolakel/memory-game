@@ -96,6 +96,26 @@ type Levels
   user: User @hasOne(fields: ["userID"])
 }
 
+type CompletedLevels
+  @model
+  @auth(
+    rules: [
+      {
+        allow: groups
+        groups: ["Admins"]
+        operations: [create, update, read, delete]
+      }
+      { allow: groups, groups: ["Users"], operations: [read] }
+    ]
+  ) {
+  id: ID!
+  levelID: ID! @index(name: "byLevel", queryField: "completedLevelByLevel")
+  level: Levels @hasOne(fields: ["levelID"])
+  userID: ID! @primaryKey
+  user: User @hasOne(fields: ["userID"])
+  rate: Float
+}
+
 type PushToken
   @model
   @auth(

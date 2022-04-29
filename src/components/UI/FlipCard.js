@@ -1,18 +1,21 @@
 import Animated, { StretchOutY } from "react-native-reanimated";
 import React from "react";
 import { Box, Image, Pressable, Text } from "native-base";
+import { useDispatch } from "react-redux";
+import { selectCard } from "../../../store/actions/level";
 
 export const FlipCard = ({
   size = 150,
   card,
-  selectCard,
   firstFlip,
   show,
   frontEntering,
 }) => {
-  React.useEffect(() => {
-    console.log("useEffect", card.id);
-  }, []);
+  const dispatch = useDispatch();
+
+  const onSelect = () => {
+    dispatch(selectCard(card));
+  };
   return (
     <Box
       style={{
@@ -40,7 +43,7 @@ export const FlipCard = ({
             alignItems="center"
             justifyContent="center"
             onPress={() => {
-              selectCard(card);
+              onSelect(card);
             }}
             bg={"blue.500"}
             disabled={firstFlip || show}
@@ -72,7 +75,7 @@ export const FlipCard = ({
               width: size,
             }}
             onPress={() => {
-              selectCard(card);
+              onSelect();
             }}
             bg={"blue.700"}
             disabled={firstFlip || show}
