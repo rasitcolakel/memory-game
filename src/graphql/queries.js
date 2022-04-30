@@ -256,6 +256,90 @@ export const searchLevels = /* GraphQL */ `
     }
   }
 `;
+export const getCompletedLevels = /* GraphQL */ `
+  query GetCompletedLevels($userID: ID!) {
+    getCompletedLevels(userID: $userID) {
+      id
+      levelID
+      level {
+        id
+        number
+        gameRules
+        userID
+        createdAt
+        updatedAt
+      }
+      userID
+      user {
+        id
+        name
+        email
+        username
+        isNotificationsAccepted
+        createdAt
+        updatedAt
+        owner
+      }
+      rate
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listCompletedLevels = /* GraphQL */ `
+  query ListCompletedLevels(
+    $userID: ID
+    $filter: ModelCompletedLevelsFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listCompletedLevels(
+      userID: $userID
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        levelID
+        userID
+        rate
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const completedLevelByLevel = /* GraphQL */ `
+  query CompletedLevelByLevel(
+    $levelID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelCompletedLevelsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    completedLevelByLevel(
+      levelID: $levelID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        levelID
+        userID
+        rate
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getPushToken = /* GraphQL */ `
   query GetPushToken($userID: ID!) {
     getPushToken(userID: $userID) {

@@ -18,7 +18,7 @@
       "function": {
         "addUserToUsersGroup": {
           "deploymentBucketName": "amplify-memorygame-staging-105340-deployment",
-          "s3Key": "amplify-builds/addUserToUsersGroup-47335335687261685356-build.zip"
+          "s3Key": "amplify-builds/addUserToUsersGroup-6131702b3630324f477a-build.zip"
         }
       }
     }

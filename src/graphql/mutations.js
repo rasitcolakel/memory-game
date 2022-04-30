@@ -394,6 +394,105 @@ export const deleteLevels = /* GraphQL */ `
     }
   }
 `;
+export const createCompletedLevels = /* GraphQL */ `
+  mutation CreateCompletedLevels(
+    $input: CreateCompletedLevelsInput!
+    $condition: ModelCompletedLevelsConditionInput
+  ) {
+    createCompletedLevels(input: $input, condition: $condition) {
+      id
+      levelID
+      level {
+        id
+        number
+        gameRules
+        userID
+        createdAt
+        updatedAt
+      }
+      userID
+      user {
+        id
+        name
+        email
+        username
+        isNotificationsAccepted
+        createdAt
+        updatedAt
+        owner
+      }
+      rate
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateCompletedLevels = /* GraphQL */ `
+  mutation UpdateCompletedLevels(
+    $input: UpdateCompletedLevelsInput!
+    $condition: ModelCompletedLevelsConditionInput
+  ) {
+    updateCompletedLevels(input: $input, condition: $condition) {
+      id
+      levelID
+      level {
+        id
+        number
+        gameRules
+        userID
+        createdAt
+        updatedAt
+      }
+      userID
+      user {
+        id
+        name
+        email
+        username
+        isNotificationsAccepted
+        createdAt
+        updatedAt
+        owner
+      }
+      rate
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteCompletedLevels = /* GraphQL */ `
+  mutation DeleteCompletedLevels(
+    $input: DeleteCompletedLevelsInput!
+    $condition: ModelCompletedLevelsConditionInput
+  ) {
+    deleteCompletedLevels(input: $input, condition: $condition) {
+      id
+      levelID
+      level {
+        id
+        number
+        gameRules
+        userID
+        createdAt
+        updatedAt
+      }
+      userID
+      user {
+        id
+        name
+        email
+        username
+        isNotificationsAccepted
+        createdAt
+        updatedAt
+        owner
+      }
+      rate
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createPushToken = /* GraphQL */ `
   mutation CreatePushToken(
     $input: CreatePushTokenInput!

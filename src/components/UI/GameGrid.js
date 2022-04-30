@@ -8,11 +8,11 @@ import {
   StretchInX,
 } from "react-native-reanimated";
 import { useDispatch, useSelector } from "react-redux";
-import { checkMatch, initializeLevel } from "../../../store/actions/level";
+import { checkMatch, completeLevel, initializeLevel } from "../../../store/actions/level";
 
 export default function GameGrid({ level }) {
   const dispatch = useDispatch();
-  const { cards, animations, choiceOne, choiceTwo } = useSelector(
+  const { cards, animations, choiceOne, choiceTwo, turns } = useSelector(
     (state) => state.level
   );
   const { firstFlip } = animations;
@@ -25,7 +25,7 @@ export default function GameGrid({ level }) {
   React.useEffect(() => {
     if (choiceOne && choiceTwo) dispatch(checkMatch());
   }, [choiceOne, choiceTwo]);
-  React.useEffect(() => {
+  useEffect(() => {
     if (cards.length === 0 || containerLayout === null) return;
     let height = containerLayout.height / cards.length;
     let width = containerLayout.width / cards[0].length;
@@ -35,6 +35,15 @@ export default function GameGrid({ level }) {
     }
     setCardSize(min - 10);
   }, [containerLayout, cards]);
+
+  useEffect(() => {
+    if (cards[0]?.length === 0) return;
+    if (cards && cards.length !== 2) return;
+    let unMatched = [...cards[0], ...cards[1]].filter((card) => !card.matched);
+    if (unMatched.length === 0) {
+      dispatch(completeLevel(level));
+    }
+  }, [cards]);
 
   return (
     <View

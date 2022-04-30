@@ -111,7 +111,7 @@ type CompletedLevels
   id: ID!
   levelID: ID! @index(name: "byLevel", queryField: "completedLevelByLevel")
   level: Levels @hasOne(fields: ["levelID"])
-  userID: ID! @primaryKey
+  userID: ID! @index(name: "byUser", queryField: "completedLevelByUser")
   user: User @hasOne(fields: ["userID"])
   rate: Float
 }

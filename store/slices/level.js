@@ -24,9 +24,7 @@ const slice = createSlice({
   initialState: initialState,
   reducers: {
     initializeLevel: (state) => {
-      state = _.cloneDeep(initialState);
-      state.gameRules = _.cloneDeep(initialState.gameRules);
-      state.stopped = false;
+      state = undefined;
     },
     setCards: (state, action) => {
       state.cards = action.payload.cards;
@@ -77,6 +75,9 @@ const slice = createSlice({
     setStopped: (state, action) => {
       state.stopped = action.payload.stopped;
     },
+    resetTurns: (state) => {
+      state.turns = 0;
+    }
   },
 });
 

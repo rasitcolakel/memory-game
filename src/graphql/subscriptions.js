@@ -349,6 +349,96 @@ export const onDeleteLevels = /* GraphQL */ `
     }
   }
 `;
+export const onCreateCompletedLevels = /* GraphQL */ `
+  subscription OnCreateCompletedLevels {
+    onCreateCompletedLevels {
+      id
+      levelID
+      level {
+        id
+        number
+        gameRules
+        userID
+        createdAt
+        updatedAt
+      }
+      userID
+      user {
+        id
+        name
+        email
+        username
+        isNotificationsAccepted
+        createdAt
+        updatedAt
+        owner
+      }
+      rate
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateCompletedLevels = /* GraphQL */ `
+  subscription OnUpdateCompletedLevels {
+    onUpdateCompletedLevels {
+      id
+      levelID
+      level {
+        id
+        number
+        gameRules
+        userID
+        createdAt
+        updatedAt
+      }
+      userID
+      user {
+        id
+        name
+        email
+        username
+        isNotificationsAccepted
+        createdAt
+        updatedAt
+        owner
+      }
+      rate
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteCompletedLevels = /* GraphQL */ `
+  subscription OnDeleteCompletedLevels {
+    onDeleteCompletedLevels {
+      id
+      levelID
+      level {
+        id
+        number
+        gameRules
+        userID
+        createdAt
+        updatedAt
+      }
+      userID
+      user {
+        id
+        name
+        email
+        username
+        isNotificationsAccepted
+        createdAt
+        updatedAt
+        owner
+      }
+      rate
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreatePushToken = /* GraphQL */ `
   subscription OnCreatePushToken($owner: String) {
     onCreatePushToken(owner: $owner) {

@@ -5,6 +5,11 @@ import { getImageFromCache, getRandomImages } from "../database/images";
 import { openDatabase } from "../database";
 import { levelActions } from "../slices/level";
 import { Audio } from "expo-av";
+import * as  _ from "lodash";
+import {
+  createCompletedLevels
+} from "../../src/graphql/mutations";
+import { API } from "aws-amplify";
 const db = openDatabase();
 const makeGridFromCards = (cards, columnsPerRow) => {
   const grid = [];
@@ -30,6 +35,7 @@ const calculateColumns = (length) => {
 };
 export const initializeLevel = (level) => {
   return async (dispatch) => {
+    await dispatch(levelActions.resetTurns());
     await dispatch(levelActions.initializeLevel());
     await dispatch(levelActions.setStopped({ stopped: false }));
     await dispatch(
@@ -49,7 +55,6 @@ export const initializeLevel = (level) => {
       })
     );
 
-    await dispatch(levelActions.initializeLevel());
     let randomImages = await getRandomImages(db, level.number);
     let images = await Promise.all(
       randomImages.map(async (image) => {
@@ -156,7 +161,6 @@ export const playError = async () => {
 
 export const unloadSound = (sound) => {
   sound.setOnPlaybackStatusUpdate(async (status) => {
-    console.log("status", status.didJustFinish);
     if (status.didJustFinish === true) {
       await sound.unloadAsync();
     }
@@ -170,7 +174,7 @@ export const startTimer = () => {
       clearInterval(timer);
       timer = setInterval(() => {
         dispatch(levelActions.decrementRemaining());
-      }, 100);
+      }, 1000);
     } catch (e) {
       console.log("Error", e);
     }
@@ -188,8 +192,26 @@ export const stopGame = () => {
 };
 export const replayGame = () => {
   return async (dispatch) => {
-    console.log("replay");
     await dispatch(startTimer());
     await dispatch(levelActions.setStopped({ stopped: false }));
   };
 };
+
+export const completeLevel = (level) => {
+  return async (dispatch) => {
+    stopTimer();
+    await dispatch(levelActions.setStopped({ stopped: true }));
+    const { turns, cards } = store.getState().level;
+    if (_.isFinite((cards[0].length) / (turns))) {
+      let hitRate = (cards[0].length) / (turns) * 100;
+      console.log("hitRate", hitRate, turns, cards[0].length);
+      console.log("level", level)
+      const { user } = store.getState().auth;
+      const completeLevelQuery = await API.graphql({
+        query: createCompletedLevels,
+        variables: { input: { levelID: level.id, userID: user.sub, rate: hitRate } },
+      });
+      console.log("completeLevelQuery", completeLevelQuery);
+    }
+  };
+}
