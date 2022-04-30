@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { openDatabase } from "../../../store/database";
 import { Box, View } from "native-base";
 import { FlipCard } from "../UI/FlipCard";
 import {
@@ -8,11 +7,15 @@ import {
   StretchInX,
 } from "react-native-reanimated";
 import { useDispatch, useSelector } from "react-redux";
-import { checkMatch, completeLevel, initializeLevel } from "../../../store/actions/level";
+import {
+  checkMatch,
+  completeLevel,
+  initializeLevel,
+} from "../../../store/actions/level";
 
 export default function GameGrid({ level }) {
   const dispatch = useDispatch();
-  const { cards, animations, choiceOne, choiceTwo, turns } = useSelector(
+  const { cards, animations, choiceOne, choiceTwo } = useSelector(
     (state) => state.level
   );
   const { firstFlip } = animations;

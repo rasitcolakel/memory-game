@@ -2,12 +2,18 @@ import { Auth, API, graphqlOperation } from "aws-amplify";
 import { uiActions } from "../slices/ui";
 import store from "../index";
 import {
-  createLevels,
-  deleteLevels,
-  updateLevels,
-} from "../../src/graphql/mutations";
-import { searchLevels } from "../../src/graphql/queries";
+  completedLevelByUser,
+  listCompletedLevels,
+  searchLevels,
+} from "../../src/graphql/queries";
 import { contentsActions } from "../slices/contents";
+import {
+  clearCompletedLevels,
+  getCompletedLevelsFromDB,
+  insertCompletedLevel,
+} from "../database/completedLevels";
+import { openDatabase } from "../database";
+const db = openDatabase();
 export const getLevels = (reset) => {
   return async (dispatch) => {
     if (reset) {
@@ -67,112 +73,30 @@ export const getLevels = (reset) => {
   };
 };
 
-export const createLevel = (data, reset) => {
+export const getCompletedLevels = () => {
   return async (dispatch) => {
     dispatch(uiActions.setLoading({ loading: true }));
+    dispatch(uiActions.closeToast());
     try {
       const { user } = store.getState().auth;
-      let input = {
-        number: data.number,
+      let variables = {
+        limit: 150,
         userID: user.sub,
       };
-      delete data.number;
-      input.gameRules = JSON.stringify(data);
-      const newLevel = await API.graphql(
-        graphqlOperation(createLevels, {
-          input,
-        })
+      const query = await API.graphql(
+        graphqlOperation(completedLevelByUser, variables)
       );
-      let gameRules = JSON.parse(await newLevel.data.createLevels?.gameRules);
-      let newItem = { ...newLevel.data.createLevels, ...gameRules };
-      delete newItem?.gameRules;
-      dispatch(
-        contentsActions.addLevel({
-          level: newItem,
-        })
-      );
-      dispatch(contentsActions.hideLevelModal());
-      dispatch(uiActions.closeToast());
-      if (typeof reset === "function") reset();
-    } catch (e) {
-      await dispatch(
-        uiActions.showToast({
-          toast: {
-            title: "Error",
-            status: "error",
-            description: e.message,
-          },
-        })
-      );
-    }
-    dispatch(uiActions.setLoading({ loading: false }));
-  };
-};
-
-export const updateLevel = (data, selected, reset) => {
-  return async (dispatch) => {
-    dispatch(uiActions.setLoading({ loading: true }));
-    try {
-      const { user } = store.getState().auth;
-      let input = {
-        id: data.id,
-        number: data.number,
-        userID: user.sub,
-      };
-      delete data.number;
-      input.gameRules = JSON.stringify({
-        images: data.images,
-        seconds: data.seconds,
-        for1Stars: data.for1Stars,
-        for2Stars: data.for2Stars,
-        for3Stars: data.for3Stars,
+      clearCompletedLevels(db);
+      await query.data.completedLevelByUser.items.map((item) => {
+        insertCompletedLevel(db, item);
       });
-
-      const updatedLevel = await API.graphql({
-        query: updateLevels,
-        variables: {
-          input,
-        },
-      });
-
+      let results = await getCompletedLevelsFromDB(db);
+      console.log("results.length", results.length);
       await dispatch(
-        contentsActions.updateLevel({
-          level: updatedLevel.data.updateLevels,
+        contentsActions.setCompletedLevels({
+          data: results,
         })
       );
-      dispatch(contentsActions.hideLevelModal());
-      dispatch(uiActions.closeToast());
-      if (typeof reset === "function") reset();
-    } catch (e) {
-      await dispatch(
-        uiActions.showToast({
-          toast: {
-            title: "Error",
-            status: "error",
-            description: e.message,
-          },
-        })
-      );
-    }
-    dispatch(uiActions.setLoading({ loading: false }));
-  };
-};
-
-export const deleteLevel = (id, callback) => {
-  return async (dispatch) => {
-    dispatch(uiActions.setLoading({ loading: true }));
-    try {
-      const { levels } = store.getState().contents;
-      const level = levels.data.find((item) => item.id === id);
-      await API.graphql({
-        query: deleteLevels,
-        variables: {
-          input: { id },
-        },
-      });
-      dispatch(contentsActions.deleteLevel({ id }));
-      dispatch(uiActions.closeToast());
-      callback();
     } catch (e) {
       await dispatch(
         uiActions.showToast({

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { ScrollView, Text } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import AppContainer from "../UI/AppContainer";
-import { getLevels } from "../../../store/actions/levels";
+import { getCompletedLevels, getLevels } from "../../../store/actions/levels";
 import { getImages } from "../../../store/actions/image";
 import { StatusBar } from "native-base";
 import LevelCard from "../UI/LevelCard";
@@ -22,6 +22,7 @@ export default function Home() {
   useEffect(() => {
     createImageTable(db);
     cacheAllImages(db);
+    dispatch(getCompletedLevels());
   }, []);
   React.useEffect(() => {
     dispatch(getImages(true));
@@ -31,7 +32,6 @@ export default function Home() {
   const loadMore = () => {
     dispatch(getLevels());
   };
-
   return (
     <AppContainer>
       <ScrollView
@@ -42,9 +42,22 @@ export default function Home() {
           alignItems: "center",
           justifyContent: "center",
           paddingTop: StatusBar.currentHeight || 0,
+          marginHorizontal: 20,
         }}
       >
-        {data && data.map((item) => <LevelCard level={item} key={item.id} />)}
+        {data &&
+          data.map((item, index) => (
+            <LevelCard
+              level={item}
+              key={item.id}
+              isPrevLevelCompleted={
+                index === 0 ||
+                index === 1 ||
+                data[index - 1]?.completed !== null ||
+                data[index - 2]?.completed !== null
+              }
+            />
+          ))}
       </ScrollView>
     </AppContainer>
   );

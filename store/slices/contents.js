@@ -228,6 +228,19 @@ const slice = createSlice({
     setLevelLoading(state, actions) {
       state.levels.loading = actions.payload.loading;
     },
+    setCompletedLevels(state, actions) {
+      if (state.levels.data === null) state.levels.data = [];
+      state.levels.data = state.levels.data.map(level => {
+        let find = actions.payload.data.find(item => item.level_id === level.id);
+        if (find) {
+          level.completed = { ...find };
+        } else {
+          level.completed = null;
+        }
+        return level;
+      });
+
+    },
   },
 });
 

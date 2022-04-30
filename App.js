@@ -10,6 +10,8 @@ import Navigator from "./src/Navigator/Navigator";
 import { openDatabase } from "./store/database";
 import * as Updates from "expo-updates";
 import { setStatusBarHidden } from "expo-status-bar";
+import { createCompletedLevelsTable } from "./store/database/completedLevels";
+import { createImageTable } from "./store/database/images";
 
 LogBox.ignoreLogs([
   "NativeBase:",
@@ -47,6 +49,8 @@ export const theme = extendTheme({
 
 function App() {
   useEffect(() => {
+    createCompletedLevelsTable(db);
+    createImageTable(db);
     setStatusBarHidden(true);
     checkUpdates();
   }, []);
@@ -75,7 +79,7 @@ function App() {
                 ]
               );
             })
-            .catch((e) => {});
+            .catch((e) => { });
         }
       });
     }

@@ -3,9 +3,10 @@ import React from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
-export default function LevelCard({ level }) {
+export default function LevelCard({ level, isPrevLevelCompleted }) {
   const navigation = useNavigation();
-
+  let isCompleted = isPrevLevelCompleted;
+  let color = isCompleted ? "amber.400" : "gray.300";
   return (
     <Pressable
       onPress={() =>
@@ -13,11 +14,12 @@ export default function LevelCard({ level }) {
           level: level,
         })
       }
+      disabled={!isPrevLevelCompleted}
     >
       <Box
         borderWidth="4"
         borderRadius="3xl"
-        borderColor="amber.400"
+        borderColor={color}
         bg={{
           linearGradient: {
             colors: ["white", "white"],
@@ -30,14 +32,41 @@ export default function LevelCard({ level }) {
         alignItems="center"
       >
         <HStack alignItems="center">
-          <Icon name="star" size="6" color="amber.400" as={AntDesign} />
-          <Icon name="star" size="8" color="amber.400" as={AntDesign} />
-          <Icon name="star" size="6" color="amber.400" as={AntDesign} />
+          <RenderStars level={level} color={color} />
         </HStack>
-        <Text color="amber.400" fontSize="40" fontWeight="extrabold">
+        <Text color={color} fontSize="40" fontWeight="extrabold">
           {level.number}
         </Text>
       </Box>
     </Pressable>
   );
 }
+
+const RenderStars = ({ level, color }) => {
+  let isCompleted = level.completed !== null;
+  let rate = level?.completed?.rate;
+  let stars = {
+    star1: isCompleted
+      ? rate >= level?.for1Stars
+        ? "star"
+        : "staro"
+      : "staro",
+    star2: isCompleted
+      ? rate >= level?.for2Stars
+        ? "star"
+        : "staro"
+      : "staro",
+    star3: isCompleted
+      ? rate >= level?.for3Stars
+        ? "star"
+        : "staro"
+      : "staro",
+  };
+  return (
+    <>
+      <Icon name={stars.star1} size="5" color={color} as={AntDesign} />
+      <Icon name={stars.star2} size="6" color={color} as={AntDesign} />
+      <Icon name={stars.star3} size="7" color={color} as={AntDesign} />
+    </>
+  );
+};

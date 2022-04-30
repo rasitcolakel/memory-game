@@ -257,8 +257,8 @@ export const searchLevels = /* GraphQL */ `
   }
 `;
 export const getCompletedLevels = /* GraphQL */ `
-  query GetCompletedLevels($userID: ID!) {
-    getCompletedLevels(userID: $userID) {
+  query GetCompletedLevels($id: ID!) {
+    getCompletedLevels(id: $id) {
       id
       levelID
       level {
@@ -288,19 +288,11 @@ export const getCompletedLevels = /* GraphQL */ `
 `;
 export const listCompletedLevels = /* GraphQL */ `
   query ListCompletedLevels(
-    $userID: ID
     $filter: ModelCompletedLevelsFilterInput
     $limit: Int
     $nextToken: String
-    $sortDirection: ModelSortDirection
   ) {
-    listCompletedLevels(
-      userID: $userID
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
+    listCompletedLevels(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         levelID
@@ -323,6 +315,33 @@ export const completedLevelByLevel = /* GraphQL */ `
   ) {
     completedLevelByLevel(
       levelID: $levelID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        levelID
+        userID
+        rate
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const completedLevelByUser = /* GraphQL */ `
+  query CompletedLevelByUser(
+    $userID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelCompletedLevelsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    completedLevelByUser(
+      userID: $userID
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit
