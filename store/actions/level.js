@@ -5,10 +5,8 @@ import { getImageFromCache, getRandomImages } from "../database/images";
 import { openDatabase } from "../database";
 import { levelActions } from "../slices/level";
 import { Audio } from "expo-av";
-import * as  _ from "lodash";
-import {
-  createCompletedLevels
-} from "../../src/graphql/mutations";
+import * as _ from "lodash";
+import { createCompletedLevels } from "../../src/graphql/mutations";
 import { API } from "aws-amplify";
 const db = openDatabase();
 const makeGridFromCards = (cards, columnsPerRow) => {
@@ -202,16 +200,15 @@ export const completeLevel = (level) => {
     stopTimer();
     await dispatch(levelActions.setStopped({ stopped: true }));
     const { turns, cards } = store.getState().level;
-    if (_.isFinite((cards[0].length) / (turns))) {
-      let hitRate = (cards[0].length) / (turns) * 100;
-      console.log("hitRate", hitRate, turns, cards[0].length);
-      console.log("level", level)
+    if (_.isFinite(cards[0].length / turns)) {
+      let hitRate = (cards[0].length / turns) * 100;
       const { user } = store.getState().auth;
       const completeLevelQuery = await API.graphql({
         query: createCompletedLevels,
-        variables: { input: { levelID: level.id, userID: user.sub, rate: hitRate } },
+        variables: {
+          input: { levelID: level.id, userID: user.sub, rate: hitRate },
+        },
       });
-      console.log("completeLevelQuery", completeLevelQuery);
     }
   };
-}
+};

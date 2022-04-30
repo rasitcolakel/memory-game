@@ -212,3 +212,23 @@ export const getRandomImages = (db, count) => {
     console.log(e);
   }
 };
+
+export const removeDuplicatedImages = (db) => {
+  try {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `DELETE FROM images
+        WHERE EXISTS (
+          SELECT 1 FROM images p2 
+          WHERE images.url = p2.url 
+        );`,
+        [],
+        (tx, results) => {
+          console.log("results");
+        }
+      );
+    });
+  } catch (e) {
+    console.log(e);
+  }
+};

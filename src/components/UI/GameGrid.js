@@ -41,8 +41,11 @@ export default function GameGrid({ level }) {
 
   useEffect(() => {
     if (cards[0]?.length === 0) return;
-    if (cards && cards.length !== 2) return;
-    let unMatched = [...cards[0], ...cards[1]].filter((card) => !card.matched);
+    if (cards && cards.length < 2) return;
+    let unMatched = [];
+    for (let i = 0; i < cards.length; i++)
+      unMatched = [...unMatched, ...cards[i]];
+    unMatched = unMatched.filter((card) => !card.matched);
     if (unMatched.length === 0) {
       dispatch(completeLevel(level));
     }

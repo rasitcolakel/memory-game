@@ -10,7 +10,7 @@ import { openDatabase } from "../../../store/database";
 import {
   cacheAllImages,
   createImageTable,
-  getImagesFromDb,
+  removeDuplicatedImages,
 } from "../../../store/database/images";
 const db = openDatabase();
 export default function Home() {
@@ -22,6 +22,7 @@ export default function Home() {
   useEffect(() => {
     createImageTable(db);
     cacheAllImages(db);
+    removeDuplicatedImages(db);
     dispatch(getCompletedLevels());
   }, []);
   React.useEffect(() => {
