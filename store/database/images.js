@@ -181,11 +181,15 @@ export const getImageFromCache = async (db, url) => {
     if (file.exists) {
       return file.uri;
     } else {
-      const newImage = await FileSystem.downloadAsync(url, path);
+      const newImage = await FileSystem.downloadAsync(
+        BASE_IMAGE_URL + url,
+        path
+      );
       setCacheStatus(db, image.url);
       return newImage.uri;
     }
   } catch (e) {
+    console.log("errored");
     console.log(e);
   }
 };

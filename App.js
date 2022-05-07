@@ -18,10 +18,19 @@ import {
   clearCompletedLevels,
   dropCompletedLevelsTableAndRecreate,
 } from "./store/database/completedLevels";
+import * as Sentry from "sentry-expo";
+
 LogBox.ignoreLogs([
   "NativeBase:",
   "Remote debugger is in a background tab which may cause apps to perform slowly. Fix this by foregrounding the tab (or opening it in a separate window).",
 ]);
+
+Sentry.init({
+  dsn: "https://4ee81bf273804fd192577405a9befa35@o1236693.ingest.sentry.io/6386724",
+  enableInExpoDevelopment: true,
+  debug: true, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
+});
+
 const db = openDatabase();
 // Define the config
 const config = {
@@ -57,6 +66,7 @@ function App() {
     setStatusBarHidden(true);
     checkUpdates();
     dropImageTableAndRecreate(db);
+    dropCompletedLevelsTableAndRecreate(db);
     clearCompletedLevels(db);
   }, []);
 

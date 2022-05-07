@@ -30,6 +30,7 @@
     "aws-sdk": "^2.1111.0",
     "expo": "^44.0.0",
     "expo-av": "~10.2.0",
+    "expo-device": "~4.1.0",
     "expo-file-system": "~13.1.4",
     "expo-linear-gradient": "~11.0.3",
     "expo-notifications": "~0.14.0",
@@ -53,6 +54,7 @@
     "redux": "^4.1.2",
     "redux-thunk": "^2.4.1",
     "reselect": "^4.1.5",
+    "sentry-expo": "^4.0.0",
     "shorthash": "^0.0.2",
     "uuid": "^8.3.2"
   },
