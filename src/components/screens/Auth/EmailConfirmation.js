@@ -40,7 +40,7 @@ export default function Login({ navigation }) {
       <CustomInput
         control={control}
         inputProps={{
-          placeholder: "E-mail Adress",
+          placeholder: "E-mail Address",
           isDisabled: true,
         }}
         name="username"

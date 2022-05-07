@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Box, View } from "native-base";
-import { FlipCard } from "../UI/FlipCard";
+import { FlipCard } from "./FlipCard";
 import {
   LightSpeedInLeft,
   LightSpeedInRight,
@@ -55,7 +55,7 @@ export default function GameGrid({ level }) {
     <View
       flex={1}
       onLayout={(event) => {
-        var { x, y, width, height } = event.nativeEvent.layout;
+        let {x, y, width, height} = event.nativeEvent.layout;
         setContainerLayout({ x, y, width, height });
       }}
     >

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { ScrollView, Text } from "react-native";
+import { ScrollView } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import AppContainer from "../UI/AppContainer";
 import { getCompletedLevels, getLevels } from "../../../store/actions/levels";
@@ -16,7 +16,7 @@ export default function Home({ navigation }) {
   const dispatch = useDispatch();
   const { data } = useSelector((state) => state.contents.levels);
   useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
+    let unsubscribe = navigation.addListener("focus", () => {
       console.log("focused");
       dispatch(getCompletedLevels());
     });

@@ -5,7 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 
 export default function LevelCard({ level, isPrevLevelCompleted }) {
   const navigation = useNavigation();
-  let isCompleted = isPrevLevelCompleted;
+  const isCompleted = isPrevLevelCompleted;
   let color = isCompleted ? "amber.400" : "gray.300";
   return (
     <Pressable

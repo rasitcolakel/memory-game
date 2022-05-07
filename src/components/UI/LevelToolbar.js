@@ -25,7 +25,7 @@ export default function LevelToolbar({ restartGame }) {
   React.useEffect(() => {
     if (gameRules.remaining === 0) {
       stopTimer();
-      playError();
+      playError().then(r => console.log("r", r));
       dispatch(
         levelActions.setRemaining({
           remaining: null,

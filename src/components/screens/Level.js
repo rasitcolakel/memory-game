@@ -12,7 +12,7 @@ export default function Level({ route, navigation }) {
   const { level } = route.params;
   const dispatch = useDispatch();
   React.useEffect(() => {
-    const unsubscribe = navigation.addListener("beforeRemove", () => {
+    let unsubscribe = navigation.addListener("beforeRemove", () => {
       dispatch(levelActions.initializeLevel());
       stopTimer();
     });

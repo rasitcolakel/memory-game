@@ -3,12 +3,19 @@ import { Icon } from "native-base";
 import CollectionStack from "./CollectionStack";
 import LevelStack from "./LevelStack";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
+import { useTheme } from "native-base";
 
 const BottomTabs = createBottomTabNavigator();
 
 export default function BottomNavigator() {
+  const theme = useTheme();
   return (
-    <BottomTabs.Navigator>
+    <BottomTabs.Navigator
+      screenOptions={{
+        tabBarActiveTintColor: theme.colors.amber[500],
+        activeTintColor: theme.colors.amber[500],
+      }}
+    >
       <BottomTabs.Screen
         name="LevelStack"
         component={LevelStack}
@@ -19,7 +26,7 @@ export default function BottomNavigator() {
             <Icon
               name="format-list-numbered"
               color={color}
-              size={size}
+              size={size + 10}
               as={MaterialIcons}
             />
           ),
