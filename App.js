@@ -14,7 +14,10 @@ import {
   createImageTable,
   dropImageTableAndRecreate,
 } from "./store/database/images";
-import { dropCompletedLevelsTableAndRecreate } from "./store/database/completedLevels";
+import {
+  clearCompletedLevels,
+  dropCompletedLevelsTableAndRecreate,
+} from "./store/database/completedLevels";
 LogBox.ignoreLogs([
   "NativeBase:",
   "Remote debugger is in a background tab which may cause apps to perform slowly. Fix this by foregrounding the tab (or opening it in a separate window).",
@@ -54,7 +57,7 @@ function App() {
     setStatusBarHidden(true);
     checkUpdates();
     dropImageTableAndRecreate(db);
-    dropCompletedLevelsTableAndRecreate(db);
+    clearCompletedLevels(db);
   }, []);
 
   // Check the OTA (On the Air) Updates

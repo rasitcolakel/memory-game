@@ -105,7 +105,11 @@ type CompletedLevels
         groups: ["Admins"]
         operations: [create, update, read, delete]
       }
-      { allow: groups, groups: ["Users"], operations: [read] }
+      {
+        allow: groups
+        groups: ["Users"]
+        operations: [create, update, read, delete]
+      }
     ]
   ) {
   id: ID!
@@ -136,4 +140,29 @@ type PushToken
   pushToken: String!
   userID: ID! @primaryKey
   user: User @hasOne(fields: ["userID"])
+}
+
+type CompletedCollections
+  @model
+  @auth(
+    rules: [
+      {
+        allow: groups
+        groups: ["Admins"]
+        operations: [create, update, read, delete]
+      }
+      {
+        allow: groups
+        groups: ["Users"]
+        operations: [create, update, read, delete]
+      }
+    ]
+  ) {
+  id: ID!
+  collectionID: ID!
+    @index(name: "byCollection", queryField: "completedCollectionByCollection")
+  collection: Collections @hasOne(fields: ["collectionID"])
+  userID: ID! @index(name: "byUser", queryField: "completedCollectionByUser")
+  user: User @hasOne(fields: ["userID"])
+  rate: Float
 }

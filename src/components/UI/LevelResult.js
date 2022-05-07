@@ -1,13 +1,6 @@
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import React, { useEffect, useState } from "react";
-import {
-  Alert,
-  AlertDialog,
-  Button,
-  HStack,
-  Icon,
-  IconButton,
-} from "native-base";
+import { AlertDialog, HStack, Icon, IconButton, Text } from "native-base";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { initializeLevel } from "../../../store/actions/level";
@@ -27,22 +20,45 @@ export default function LevelResult({ level }) {
   const { data } = useSelector((state) => state.contents.levels);
   const findNextLevel = data && data.findIndex((l) => l.id === level.id);
   const nextLevel = data && data[findNextLevel + 1];
-  if (levelResult === undefined || !levelResult.isOpen) return <></>;
+  if (!levelResult.isOpen) return <></>;
   return (
-    <AlertDialog
-      leastDestructiveRef={cancelRef}
-      isOpen={levelResult.isOpen}
-      onClose={() => dispatch(levelActions.resetLevelResult())}
+    <View
+      style={{
+        backgroundColor: "rgba(0,0,0,0.5)",
+        position: "absolute",
+        width: "100%",
+        height: "100%",
+        zIndex: 5,
+        justifyContent: "center",
+        alignItems: "center",
+      }}
     >
       <AlertDialog.Content
         style={{
-          width: "60%",
+          width: "50%",
           backgroundColor: "rgba(255, 255, 255, 1)",
         }}
       >
-        <AlertDialog.CloseButton />
-        <AlertDialog.Header>
-          {levelResult?.isCompleted ? "Level Completed" : "Level Failed"}
+        <AlertDialog.Header
+          style={{
+            justifyContent: "space-between",
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          <Text fontSize="xl">
+            {levelResult?.isCompleted ? "Level Completed" : "Level Failed"}
+          </Text>
+          <IconButton
+            size="lg"
+            p="0"
+            _icon={{
+              as: Ionicons,
+              name: "close",
+              color: "amber.500",
+            }}
+            onPress={() => dispatch(initializeLevel(level))}
+          />
         </AlertDialog.Header>
         <AlertDialog.Body>
           <RenderStars
@@ -59,23 +75,21 @@ export default function LevelResult({ level }) {
           }}
         >
           <IconButton
-            size="lg"
+            size="sm"
             _icon={{
               as: Ionicons,
               name: "refresh",
               color: "amber.500",
-              size: "lg",
             }}
             onPress={() => dispatch(initializeLevel(level))}
           />
           {levelResult?.isCompleted && (
             <IconButton
-              size="lg"
+              size="sm"
               _icon={{
                 as: AntDesign,
                 name: "forward",
                 color: !nextLevel ? "gray.300" : "amber.500",
-                size: "lg",
               }}
               disabled={!nextLevel}
               onPress={() => {
@@ -87,7 +101,7 @@ export default function LevelResult({ level }) {
           )}
         </AlertDialog.Footer>
       </AlertDialog.Content>
-    </AlertDialog>
+    </View>
   );
 }
 

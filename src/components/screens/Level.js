@@ -22,12 +22,14 @@ export default function Level({ route, navigation }) {
     dispatch(initializeLevel(level));
   };
   return (
-    <AppContainer>
-      <View m={2} mx={10} flex={1}>
-        <LevelResult level={level} />
-        <LevelToolbar level={level} restartGame={restartGame} />
-        <GameGrid level={level} />
-      </View>
-    </AppContainer>
+    <>
+      <LevelResult level={level} />
+      <AppContainer>
+        <View m={2} mx={10} flex={1}>
+          <LevelToolbar level={level} restartGame={restartGame} />
+          <GameGrid level={level} />
+        </View>
+      </AppContainer>
+    </>
   );
 }
