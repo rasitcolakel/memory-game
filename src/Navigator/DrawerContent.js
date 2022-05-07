@@ -6,7 +6,11 @@ import {
 } from "@react-navigation/drawer";
 
 const DrawerContent = (props) => {
-  return <DrawerContentScrollView {...props}></DrawerContentScrollView>;
+  return (
+    <DrawerContentScrollView {...props}>
+      <DrawerItem label="Help" />
+    </DrawerContentScrollView>
+  );
 };
 
 export default DrawerContent;
