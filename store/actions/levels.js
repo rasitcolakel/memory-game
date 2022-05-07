@@ -91,7 +91,6 @@ export const getCompletedLevels = () => {
         insertCompletedLevel(db, item);
       });
       let results = await getCompletedLevelsFromDB(db);
-      console.log("results.length", results.length);
       await dispatch(
         contentsActions.setCompletedLevels({
           data: results,

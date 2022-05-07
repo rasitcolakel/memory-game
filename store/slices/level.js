@@ -17,6 +17,11 @@ let initialState = {
     seconds: 100,
     remaining: null,
   },
+  levelResult: {
+    isCompleted: false,
+    isOpen: false,
+    hitRate: 0,
+  },
 };
 
 const slice = createSlice({
@@ -77,7 +82,13 @@ const slice = createSlice({
     },
     resetTurns: (state) => {
       state.turns = 0;
-    }
+    },
+    setLevelResult: (state, action) => {
+      state.levelResult = action.payload.levelResult;
+    },
+    resetLevelResult: (state) => {
+      state.levelResult = initialState.levelResult;
+    },
   },
 });
 

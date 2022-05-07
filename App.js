@@ -10,9 +10,11 @@ import Navigator from "./src/Navigator/Navigator";
 import { openDatabase } from "./store/database";
 import * as Updates from "expo-updates";
 import { setStatusBarHidden } from "expo-status-bar";
-import { createCompletedLevelsTable } from "./store/database/completedLevels";
-import { createImageTable } from "./store/database/images";
-
+import {
+  createImageTable,
+  dropImageTableAndRecreate,
+} from "./store/database/images";
+import { dropCompletedLevelsTableAndRecreate } from "./store/database/completedLevels";
 LogBox.ignoreLogs([
   "NativeBase:",
   "Remote debugger is in a background tab which may cause apps to perform slowly. Fix this by foregrounding the tab (or opening it in a separate window).",
@@ -49,10 +51,10 @@ export const theme = extendTheme({
 
 function App() {
   useEffect(() => {
-    createCompletedLevelsTable(db);
-    createImageTable(db);
     setStatusBarHidden(true);
     checkUpdates();
+    dropImageTableAndRecreate(db);
+    dropCompletedLevelsTableAndRecreate(db);
   }, []);
 
   // Check the OTA (On the Air) Updates
@@ -79,7 +81,7 @@ function App() {
                 ]
               );
             })
-            .catch((e) => { });
+            .catch((e) => {});
         }
       });
     }

@@ -9,21 +9,22 @@ import LevelCard from "../UI/LevelCard";
 import { openDatabase } from "../../../store/database";
 import {
   cacheAllImages,
-  createImageTable,
   removeDuplicatedImages,
 } from "../../../store/database/images";
 const db = openDatabase();
-export default function Home() {
-  const { orientation } = useSelector((state) => state.ui);
+export default function Home({ navigation }) {
   const dispatch = useDispatch();
-  const { data, nextToken, loading } = useSelector(
-    (state) => state.contents.levels
-  );
+  const { data } = useSelector((state) => state.contents.levels);
   useEffect(() => {
-    createImageTable(db);
+    const unsubscribe = navigation.addListener("focus", () => {
+      console.log("focused");
+      dispatch(getCompletedLevels());
+    });
+    return unsubscribe;
+  }, [navigation]);
+  useEffect(() => {
     cacheAllImages(db);
     removeDuplicatedImages(db);
-    dispatch(getCompletedLevels());
   }, []);
   React.useEffect(() => {
     dispatch(getImages(true));

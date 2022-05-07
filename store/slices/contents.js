@@ -230,8 +230,10 @@ const slice = createSlice({
     },
     setCompletedLevels(state, actions) {
       if (state.levels.data === null) state.levels.data = [];
-      state.levels.data = state.levels.data.map(level => {
-        let find = actions.payload.data.find(item => item.level_id === level.id);
+      state.levels.data = state.levels.data.map((level) => {
+        let find = actions.payload.data.find(
+          (item) => item.level_id === level.id
+        );
         if (find) {
           level.completed = { ...find };
         } else {
@@ -239,7 +241,14 @@ const slice = createSlice({
         }
         return level;
       });
-
+    },
+    updateCompletedLevelRate(state, actions) {
+      state.levels.data = state.levels.data.map((level) => {
+        if (level.id === actions.payload.id) {
+          level.completed = { ...level.completed, rate: actions.payload.rate };
+        }
+        return level;
+      });
     },
   },
 });

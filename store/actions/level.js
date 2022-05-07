@@ -1,13 +1,19 @@
-import { authActions } from "../slices/auth";
-import { uiActions } from "../slices/ui";
 import store from "../index";
 import { getImageFromCache, getRandomImages } from "../database/images";
 import { openDatabase } from "../database";
 import { levelActions } from "../slices/level";
 import { Audio } from "expo-av";
 import * as _ from "lodash";
-import { createCompletedLevels } from "../../src/graphql/mutations";
+import {
+  createCompletedLevels,
+  updateCompletedLevels,
+} from "../../src/graphql/mutations";
 import { API } from "aws-amplify";
+import {
+  getCompletedLevelFromDB,
+  updateRate,
+} from "../database/completedLevels";
+import { contentsActions } from "../slices/contents";
 const db = openDatabase();
 const makeGridFromCards = (cards, columnsPerRow) => {
   const grid = [];
@@ -36,6 +42,8 @@ export const initializeLevel = (level) => {
     await dispatch(levelActions.resetTurns());
     await dispatch(levelActions.initializeLevel());
     await dispatch(levelActions.setStopped({ stopped: false }));
+    await dispatch(levelActions.resetLevelResult());
+
     await dispatch(
       levelActions.setFirstFlip({
         firstFlip: true,
@@ -203,12 +211,55 @@ export const completeLevel = (level) => {
     if (_.isFinite(cards[0].length / turns)) {
       let hitRate = (cards[0].length / turns) * 100;
       const { user } = store.getState().auth;
-      const completeLevelQuery = await API.graphql({
-        query: createCompletedLevels,
-        variables: {
-          input: { levelID: level.id, userID: user.sub, rate: hitRate },
-        },
-      });
+      const checkIsCompleted = await getCompletedLevelFromDB(db, level.id);
+      if (hitRate >= level?.for1Stars) {
+        if (checkIsCompleted.length === 0) {
+          await API.graphql({
+            query: createCompletedLevels,
+            variables: {
+              input: { levelID: level.id, userID: user.sub, rate: hitRate },
+            },
+          });
+        } else {
+          await API.graphql({
+            query: updateCompletedLevels,
+            variables: {
+              input: {
+                id: checkIsCompleted[0]["item_id"],
+                levelID: level.id,
+                userID: user.sub,
+                rate: hitRate,
+              },
+            },
+          });
+          updateRate(db, level.id, hitRate);
+          await dispatch(
+            contentsActions.updateCompletedLevelRate({
+              id: level.id,
+              rate: hitRate,
+            })
+          );
+        }
+        await dispatch(
+          levelActions.setLevelResult({
+            levelResult: {
+              isCompleted: true,
+              isOpen: true,
+              hitRate: hitRate,
+            },
+          })
+        );
+      } else {
+        await dispatch(
+          levelActions.setLevelResult({
+            levelResult: {
+              isCompleted: false,
+              isOpen: true,
+              hitRate: 0,
+            },
+          })
+        );
+      }
     }
   };
 };

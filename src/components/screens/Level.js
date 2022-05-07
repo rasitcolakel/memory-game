@@ -6,6 +6,7 @@ import GameGrid from "../UI/GameGrid";
 import { useDispatch } from "react-redux";
 import { levelActions } from "../../../store/slices/level";
 import { initializeLevel, stopTimer } from "../../../store/actions/level";
+import LevelResult from "../UI/LevelResult";
 
 export default function Level({ route, navigation }) {
   const { level } = route.params;
@@ -23,6 +24,7 @@ export default function Level({ route, navigation }) {
   return (
     <AppContainer>
       <View m={2} mx={10} flex={1}>
+        <LevelResult level={level} />
         <LevelToolbar level={level} restartGame={restartGame} />
         <GameGrid level={level} />
       </View>
