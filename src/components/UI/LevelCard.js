@@ -3,7 +3,7 @@ import React from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
-export default function LevelCard({ level, isPrevLevelCompleted }) {
+export default function LevelCard({ level, isPrevLevelCompleted, width }) {
   const navigation = useNavigation();
   const isCompleted = isPrevLevelCompleted;
   let color = isCompleted ? "amber.400" : "gray.300";
@@ -15,6 +15,7 @@ export default function LevelCard({ level, isPrevLevelCompleted }) {
         })
       }
       disabled={!isPrevLevelCompleted}
+      w={width}
     >
       <Box
         borderWidth="4"

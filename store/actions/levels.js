@@ -19,10 +19,10 @@ export const getLevels = (reset) => {
     if (reset) {
       await dispatch(contentsActions.resetLevels());
     }
-    dispatch(uiActions.setLoading({ loading: true }));
-    dispatch(uiActions.closeToast());
+    await dispatch(uiActions.setLoading({ loading: true }));
+    await dispatch(uiActions.closeToast());
     const { nextToken } = store.getState().contents.levels;
-    dispatch(
+    await dispatch(
       contentsActions.setLevelLoading({
         loading: true,
       })
@@ -46,7 +46,7 @@ export const getLevels = (reset) => {
         let newItem = { ...gameRules, ...item };
         return newItem;
       });
-      dispatch(
+      await dispatch(
         contentsActions.setLevels({
           data: data,
           nextToken: query.data.searchLevels.nextToken,

@@ -232,13 +232,13 @@ export const completeLevel = (level) => {
               },
             },
           });
-          updateRate(db, level.id, hitRate);
-          await dispatch(
-            contentsActions.updateCompletedLevelRate({
-              id: level.id,
-              rate: hitRate,
-            })
-          );
+          // updateRate(db, level.id, hitRate);
+          // await dispatch(
+          //   contentsActions.updateCompletedLevelRate({
+          //     id: level.id,
+          //     rate: hitRate,
+          //   })
+          // );
         }
         await dispatch(
           levelActions.setLevelResult({
