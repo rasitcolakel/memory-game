@@ -53,19 +53,28 @@ export default function AppContainer({ children, keyboardAvoiding = false }) {
         >
           {children}
           {loading && (
-            <Box
-              bg="black"
-              flex="1"
-              style={{
-                position: "absolute",
-                height: "100%",
-                width: "100%",
-                opacity: 0.1,
-              }}
-              justifyContent="center"
-            >
-              <Spinner color="white" size="lg" />
-            </Box>
+            <>
+              <Box
+                bg="black"
+                flex="1"
+                style={{
+                  position: "absolute",
+                  height: "100%",
+                  width: "100%",
+                  opacity: 0.1,
+                }}
+                justifyContent="center"
+              ></Box>
+              <Spinner
+                color="red.500"
+                size="lg"
+                style={{
+                  position: "absolute",
+                  height: "100%",
+                  width: "100%",
+                }}
+              />
+            </>
           )}
         </Box>
       </KeyboardAvoiding>

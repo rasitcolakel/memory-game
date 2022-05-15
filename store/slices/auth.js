@@ -28,6 +28,12 @@ const slice = createSlice({
     setPushToken(state, action) {
       state.pushToken = action.payload.pushToken;
     },
+    setUserDetails(state, action) {
+      state.user = {
+        ...state.user,
+        userDetails: { ...action.payload.userDetails },
+      };
+    },
   },
 });
 

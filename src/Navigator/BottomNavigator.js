@@ -4,6 +4,7 @@ import CollectionStack from "./CollectionStack";
 import LevelStack from "./LevelStack";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { useTheme } from "native-base";
+import ProfileStack from "./ProfileStack";
 
 const BottomTabs = createBottomTabNavigator();
 
@@ -45,6 +46,17 @@ export default function BottomNavigator() {
               size={size}
               as={MaterialIcons}
             />
+          ),
+        }}
+      />
+      <BottomTabs.Screen
+        name="ProfileStack"
+        component={ProfileStack}
+        options={{
+          title: "Profile",
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => (
+            <Icon name="user" color={color} size={size} as={AntDesign} />
           ),
         }}
       />

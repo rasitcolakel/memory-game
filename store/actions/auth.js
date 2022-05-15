@@ -284,8 +284,77 @@ export const setPushToken = (token) => {
             },
           })
         );
-        dispatch(authActions.setPushToken({ pushToken: token }));
       }
+      dispatch(authActions.setPushToken({ pushToken: token }));
+      await dispatch(getUserFromDB());
+    } catch (e) {
+      console.log("error", e);
+      dispatch(
+        uiActions.showToast({
+          toast: {
+            title: "Error",
+            status: "error",
+            description: e.message,
+          },
+        })
+      );
+    }
+    dispatch(uiActions.setLoading({ loading: false }));
+  };
+};
+
+export const getUserFromDB = (id) => {
+  return async (dispatch) => {
+    dispatch(uiActions.setLoading({ loading: true }));
+    try {
+      const { user } = store.getState().auth;
+
+      let APIuser = await API.graphql({
+        query: getUser,
+        variables: {
+          id: user.sub,
+        },
+      });
+      let userDetails = APIuser.data.getUser;
+      dispatch(authActions.setUserDetails({ userDetails }));
+    } catch (e) {
+      console.log("error", e);
+      dispatch(
+        uiActions.showToast({
+          toast: {
+            title: "Error",
+            status: "error",
+            description: e.message,
+          },
+        })
+      );
+    }
+
+    dispatch(uiActions.setLoading({ loading: false }));
+  };
+};
+
+export const resetPushToken = () => {
+  return async (dispatch) => {
+    dispatch(uiActions.setLoading({ loading: true }));
+    try {
+      const { user } = store.getState().auth;
+      await API.graphql(
+        graphqlOperation(deletePushToken, {
+          input: {
+            userID: user.sub,
+          },
+        })
+      );
+      await API.graphql(
+        graphqlOperation(updateUser, {
+          input: {
+            id: user.sub,
+            isNotificationsAccepted: false,
+          },
+        })
+      );
+      await dispatch(getUserFromDB());
     } catch (e) {
       console.log("error", e);
       dispatch(

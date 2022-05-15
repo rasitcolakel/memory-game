@@ -199,7 +199,7 @@ export const startTimer = () => {
       clearInterval(timer);
       timer = setInterval(() => {
         dispatch(levelActions.decrementRemaining());
-      }, 100);
+      }, 1000);
     } catch (e) {
       console.log("Error", e);
     }
