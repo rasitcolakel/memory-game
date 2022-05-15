@@ -17,7 +17,7 @@ import {
   updateRate,
 } from "../database/completedLevels";
 import { contentsActions } from "../slices/contents";
-import { getCompletedCollections } from "./collections";
+import { getCompletedCollectionFromDB } from "../database/completedCollections";
 const db = openDatabase();
 const makeGridFromCards = (cards, columnsPerRow) => {
   const grid = [];
@@ -41,16 +41,16 @@ const calculateColumns = (length) => {
   }
   return length / 5;
 };
-export const initializeLevel = (level) => {
+export const initializeLevel = (level, onlyInit = false) => {
   return async (dispatch) => {
-    console.log("images images");
     let levelType =
       level?.type && level?.type === "collection" ? "collection" : "level";
-    await dispatch(levelActions.resetTurns());
     await dispatch(levelActions.initializeLevel());
+    await dispatch(levelActions.resetTurns());
     await dispatch(levelActions.setStopped({ stopped: false }));
     await dispatch(levelActions.resetLevelResult());
-
+    await dispatch(levelActions.setChoiceOne({ choiceOne: null }));
+    await dispatch(levelActions.setChoiceTwo({ choiceTwo: null }));
     await dispatch(
       levelActions.setFirstFlip({
         firstFlip: true,
@@ -60,10 +60,10 @@ export const initializeLevel = (level) => {
     await dispatch(
       levelActions.setGameRules({
         gameRules: {
-          for1Stars: level.for1Stars || 0,
-          for2Stars: level.for2Stars || 0,
-          for3Stars: level.for3Stars || 0,
-          seconds: level.seconds || 0,
+          for1Stars: level?.for1Stars || 0,
+          for2Stars: level?.for2Stars || 0,
+          for3Stars: level?.for3Stars || 0,
+          seconds: level?.seconds || 0,
           remaining: null,
           type: levelType,
         },
@@ -74,7 +74,7 @@ export const initializeLevel = (level) => {
     if (levelType === "collection") {
       randomImages = [...level?.images.items.map((image) => image.image)];
     } else {
-      randomImages = await getRandomImages(db, level.number);
+      randomImages = await getRandomImages(db, level?.number);
     }
 
     let images = await Promise.all(
@@ -107,7 +107,7 @@ export const initializeLevel = (level) => {
       );
       await dispatch(
         levelActions.setRemaining({
-          remaining: level.seconds || 60,
+          remaining: level?.seconds || 60,
         })
       );
       await dispatch(startTimer());
@@ -129,9 +129,13 @@ export const selectCard = (id) => {
 
 export const checkMatch = () => {
   return async (dispatch) => {
-    const { choiceOne, choiceTwo } = store.getState().level;
+    const { choiceOne, choiceTwo, turns } = store.getState().level;
     if (choiceOne !== null && choiceTwo !== null) {
-      dispatch(levelActions.increaseTurns());
+      dispatch(
+        levelActions.increaseTurns({
+          turns: turns + 1,
+        })
+      );
       if (choiceOne.url === choiceTwo.url) {
         // await playSuccess();
         dispatch(levelActions.setCardVisibility({ id: choiceOne.id }));
@@ -229,12 +233,18 @@ export const completeLevel = (level) => {
       let hitRate = (cards[0].length / turns) * 100;
       const { user } = store.getState().auth;
       if (gameRules?.type === "collection") {
-        await API.graphql({
-          query: createCompletedCollections,
-          variables: {
-            input: { collectionID: level.id, userID: user.sub },
-          },
-        });
+        const checkIsCompleted = await getCompletedCollectionFromDB(
+          db,
+          level.id
+        );
+        if (checkIsCompleted.length === 0) {
+          await API.graphql({
+            query: createCompletedCollections,
+            variables: {
+              input: { collectionID: level.id, userID: user.sub },
+            },
+          });
+        }
         await dispatch(
           levelActions.setLevelResult({
             levelResult: {

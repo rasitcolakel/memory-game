@@ -19,6 +19,18 @@ export default function Level({ route, navigation }) {
     return unsubscribe;
   }, [navigation]);
 
+  React.useEffect(() => {
+    let unsubscribe = navigation.addListener("focus", () => {
+      // dispatch(levelActions.initializeLevel());
+      // stopTimer();
+    });
+    return unsubscribe;
+  }, [navigation]);
+
+  React.useEffect(() => {
+    dispatch(initializeLevel(level));
+  }, [level]);
+
   const restartGame = () => {
     dispatch(initializeLevel(level));
   };
@@ -26,7 +38,15 @@ export default function Level({ route, navigation }) {
     <>
       <LevelResult level={level} />
       <AppContainer>
-        <View m={2} mx={10} flex={1}>
+        <View
+          m={2}
+          mx={{
+            base: 5,
+            md: 8,
+            lg: 10,
+          }}
+          flex={1}
+        >
           <LevelToolbar level={level} restartGame={restartGame} />
           <GameGrid level={level} />
         </View>

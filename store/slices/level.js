@@ -29,7 +29,7 @@ const slice = createSlice({
   initialState: initialState,
   reducers: {
     initializeLevel: (state) => {
-      return { ...initialState };
+      state = Object.assign({}, initialState);
     },
     setCards: (state, action) => {
       state.cards = action.payload.cards;
@@ -56,8 +56,8 @@ const slice = createSlice({
     setChoiceTwo: (state, action) => {
       state.choiceTwo = action.payload.choiceTwo;
     },
-    increaseTurns: (state) => {
-      state.turns += 1;
+    increaseTurns: (state, action) => {
+      state.turns = action.payload.turns;
     },
     setCardVisibility: (state, action) => {
       state.cards = [

@@ -4,6 +4,7 @@ import React from "react";
 import { openDatabase } from "../../../store/database";
 import { getImageFromCache } from "../../../store/database/images";
 const db = openDatabase();
+
 export default function CollectionCard({ collection }) {
   const navigation = useNavigation();
   const [image, setImage] = React.useState(null);
@@ -58,7 +59,14 @@ export default function CollectionCard({ collection }) {
               }}
             />
           </Box>
-          <Text fontSize="2xl" py={3}>
+          <Text
+            fontSize={{
+              base: "md",
+              md: "xl",
+              lg: "2xl",
+            }}
+            py={3}
+          >
             {collection?.title}
           </Text>
         </Box>

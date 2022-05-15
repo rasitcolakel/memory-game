@@ -40,7 +40,11 @@ export default function LevelToolbar({ restartGame }) {
       <TouchableOpacity
         onPress={() => {
           dispatch(levelActions.initializeLevel());
-          runOnJS(navigation.goBack());
+          runOnJS(
+            navigation.navigate(
+              gameRules?.type === "collection" ? "Collections" : "Home"
+            )
+          );
         }}
       >
         <Icon name="chevron-back" size="10" color="white" as={Ionicons} />

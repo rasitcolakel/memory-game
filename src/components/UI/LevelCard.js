@@ -36,7 +36,7 @@ export default function LevelCard({ level, isPrevLevelCompleted, width }) {
           <RenderStars level={level} color={color} />
         </HStack>
         <Text color={color} fontSize="40" fontWeight="extrabold">
-          {level.number}
+          {level?.number}
         </Text>
       </Box>
     </Pressable>

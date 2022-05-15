@@ -18,7 +18,7 @@ export default function LevelResult({ level }) {
   const dispatch = useDispatch();
   const { gameRules, levelResult } = useSelector((state) => state.level);
   const { data } = useSelector((state) => state.contents.levels);
-  const findNextLevel = data && data.findIndex((l) => l.id === level.id);
+  const findNextLevel = data && data.findIndex((l) => l.id === level?.id);
   const nextLevel = data && data[findNextLevel + 1];
   if (!levelResult.isOpen) return <></>;
   return (
@@ -63,7 +63,13 @@ export default function LevelResult({ level }) {
               name: "close",
               color: "amber.500",
             }}
-            onPress={() => navigation.goBack()}
+            onPress={() =>
+              dispatch(initializeLevel(nextLevel, true)).then(() =>
+                navigation.navigate(
+                  levelResult?.type !== "collection" ? "Home" : "Collections"
+                )
+              )
+            }
           />
         </AlertDialog.Header>
         <AlertDialog.Body>
@@ -101,7 +107,11 @@ export default function LevelResult({ level }) {
                 disabled={!nextLevel}
                 onPress={() => {
                   if (nextLevel) {
-                    navigation.setParams({ level: nextLevel });
+                    dispatch(initializeLevel(nextLevel, true)).then(() =>
+                      navigation.navigate("Level", {
+                        level: nextLevel,
+                      })
+                    );
                   }
                 }}
               />
