@@ -8,8 +8,8 @@ import { levelActions } from "../../../store/slices/level";
 import { initializeLevel, stopTimer } from "../../../store/actions/level";
 import LevelResult from "../UI/LevelResult";
 
-export default function Level({ route, navigation }) {
-  const { level } = route.params;
+export default function Collection({ route, navigation }) {
+  const { level, collection } = route.params;
   const dispatch = useDispatch();
   React.useEffect(() => {
     let unsubscribe = navigation.addListener("beforeRemove", () => {
@@ -18,17 +18,16 @@ export default function Level({ route, navigation }) {
     });
     return unsubscribe;
   }, [navigation]);
-
   const restartGame = () => {
     dispatch(initializeLevel(level));
   };
   return (
     <>
-      <LevelResult level={level} />
+      <LevelResult level={level || collection} />
       <AppContainer>
         <View m={2} mx={10} flex={1}>
-          <LevelToolbar level={level} restartGame={restartGame} />
-          <GameGrid level={level} />
+          <LevelToolbar level={level || collection} restartGame={restartGame} />
+          <GameGrid level={level || collection} />
         </View>
       </AppContainer>
     </>

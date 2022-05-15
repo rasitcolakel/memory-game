@@ -16,18 +16,18 @@ import { openDatabase } from "../database";
 const db = openDatabase();
 export const getLevels = (reset) => {
   return async (dispatch) => {
-    if (reset) {
-      await dispatch(contentsActions.resetLevels());
-    }
-    await dispatch(uiActions.setLoading({ loading: true }));
-    await dispatch(uiActions.closeToast());
-    const { nextToken } = store.getState().contents.levels;
-    await dispatch(
-      contentsActions.setLevelLoading({
-        loading: true,
-      })
-    );
     try {
+      if (reset) {
+        await dispatch(contentsActions.resetLevels());
+      }
+      await dispatch(uiActions.setLoading({ loading: true }));
+      await dispatch(uiActions.closeToast());
+      const { nextToken } = store.getState().contents.levels;
+      await dispatch(
+        contentsActions.setLevelLoading({
+          loading: true,
+        })
+      );
       let variables = {
         limit: 20,
         sort: { direction: "asc", field: "number" },
@@ -64,12 +64,12 @@ export const getLevels = (reset) => {
         })
       );
     }
-    dispatch(
+    await dispatch(
       contentsActions.setLevelLoading({
         loading: false,
       })
     );
-    dispatch(uiActions.setLoading({ loading: false }));
+    await dispatch(uiActions.setLoading({ loading: false }));
   };
 };
 

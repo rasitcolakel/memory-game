@@ -565,6 +565,102 @@ export const deletePushToken = /* GraphQL */ `
     }
   }
 `;
+export const createCompletedCollections = /* GraphQL */ `
+  mutation CreateCompletedCollections(
+    $input: CreateCompletedCollectionsInput!
+    $condition: ModelCompletedCollectionsConditionInput
+  ) {
+    createCompletedCollections(input: $input, condition: $condition) {
+      id
+      collectionID
+      collection {
+        id
+        title
+        userID
+        createdAt
+        updatedAt
+      }
+      userID
+      user {
+        id
+        name
+        email
+        username
+        isNotificationsAccepted
+        createdAt
+        updatedAt
+        owner
+      }
+      rate
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateCompletedCollections = /* GraphQL */ `
+  mutation UpdateCompletedCollections(
+    $input: UpdateCompletedCollectionsInput!
+    $condition: ModelCompletedCollectionsConditionInput
+  ) {
+    updateCompletedCollections(input: $input, condition: $condition) {
+      id
+      collectionID
+      collection {
+        id
+        title
+        userID
+        createdAt
+        updatedAt
+      }
+      userID
+      user {
+        id
+        name
+        email
+        username
+        isNotificationsAccepted
+        createdAt
+        updatedAt
+        owner
+      }
+      rate
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteCompletedCollections = /* GraphQL */ `
+  mutation DeleteCompletedCollections(
+    $input: DeleteCompletedCollectionsInput!
+    $condition: ModelCompletedCollectionsConditionInput
+  ) {
+    deleteCompletedCollections(input: $input, condition: $condition) {
+      id
+      collectionID
+      collection {
+        id
+        title
+        userID
+        createdAt
+        updatedAt
+      }
+      userID
+      user {
+        id
+        name
+        email
+        username
+        isNotificationsAccepted
+        createdAt
+        updatedAt
+        owner
+      }
+      rate
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createImageCollections = /* GraphQL */ `
   mutation CreateImageCollections(
     $input: CreateImageCollectionsInput!

@@ -28,7 +28,7 @@ export default function Login({ navigation }) {
   return (
     <AuthCard>
       <Heading alignSelf="center" py="5" pb="7">
-        Sign Ip
+        Sign Up
       </Heading>
       <CustomInput
         control={control}

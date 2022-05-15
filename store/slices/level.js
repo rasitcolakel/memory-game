@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 var _ = require("lodash");
 
-let initialState = {
+const initialState = {
   cards: [],
   stopped: false,
   animations: {
@@ -29,7 +29,7 @@ const slice = createSlice({
   initialState: initialState,
   reducers: {
     initializeLevel: (state) => {
-      state = undefined;
+      return { ...initialState };
     },
     setCards: (state, action) => {
       state.cards = action.payload.cards;

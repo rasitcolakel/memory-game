@@ -406,6 +406,112 @@ export const listPushTokens = /* GraphQL */ `
     }
   }
 `;
+export const getCompletedCollections = /* GraphQL */ `
+  query GetCompletedCollections($id: ID!) {
+    getCompletedCollections(id: $id) {
+      id
+      collectionID
+      collection {
+        id
+        title
+        userID
+        createdAt
+        updatedAt
+      }
+      userID
+      user {
+        id
+        name
+        email
+        username
+        isNotificationsAccepted
+        createdAt
+        updatedAt
+        owner
+      }
+      rate
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listCompletedCollections = /* GraphQL */ `
+  query ListCompletedCollections(
+    $filter: ModelCompletedCollectionsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCompletedCollections(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        collectionID
+        userID
+        rate
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const completedCollectionByCollection = /* GraphQL */ `
+  query CompletedCollectionByCollection(
+    $collectionID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelCompletedCollectionsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    completedCollectionByCollection(
+      collectionID: $collectionID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        collectionID
+        userID
+        rate
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const completedCollectionByUser = /* GraphQL */ `
+  query CompletedCollectionByUser(
+    $userID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelCompletedCollectionsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    completedCollectionByUser(
+      userID: $userID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        collectionID
+        userID
+        rate
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getImageCollections = /* GraphQL */ `
   query GetImageCollections($id: ID!) {
     getImageCollections(id: $id) {

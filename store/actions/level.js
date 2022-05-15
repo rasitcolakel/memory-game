@@ -7,13 +7,17 @@ import * as _ from "lodash";
 import {
   createCompletedLevels,
   updateCompletedLevels,
+  createCompletedCollections,
+  updateCompletedCollections,
 } from "../../src/graphql/mutations";
+
 import { API } from "aws-amplify";
 import {
   getCompletedLevelFromDB,
   updateRate,
 } from "../database/completedLevels";
 import { contentsActions } from "../slices/contents";
+import { getCompletedCollections } from "./collections";
 const db = openDatabase();
 const makeGridFromCards = (cards, columnsPerRow) => {
   const grid = [];
@@ -39,6 +43,9 @@ const calculateColumns = (length) => {
 };
 export const initializeLevel = (level) => {
   return async (dispatch) => {
+    console.log("images images");
+    let levelType =
+      level?.type && level?.type === "collection" ? "collection" : "level";
     await dispatch(levelActions.resetTurns());
     await dispatch(levelActions.initializeLevel());
     await dispatch(levelActions.setStopped({ stopped: false }));
@@ -49,19 +56,27 @@ export const initializeLevel = (level) => {
         firstFlip: true,
       })
     );
+
     await dispatch(
       levelActions.setGameRules({
         gameRules: {
-          for1Stars: level.for1Stars,
-          for2Stars: level.for2Stars,
-          for3Stars: level.for3Stars,
-          seconds: level.seconds,
+          for1Stars: level.for1Stars || 0,
+          for2Stars: level.for2Stars || 0,
+          for3Stars: level.for3Stars || 0,
+          seconds: level.seconds || 0,
           remaining: null,
+          type: levelType,
         },
       })
     );
 
-    let randomImages = await getRandomImages(db, level.number);
+    let randomImages;
+    if (levelType === "collection") {
+      randomImages = [...level?.images.items.map((image) => image.image)];
+    } else {
+      randomImages = await getRandomImages(db, level.number);
+    }
+
     let images = await Promise.all(
       randomImages.map(async (image) => {
         let imageData = await getImageFromCache(db, image.url);
@@ -92,7 +107,7 @@ export const initializeLevel = (level) => {
       );
       await dispatch(
         levelActions.setRemaining({
-          remaining: level.seconds,
+          remaining: level.seconds || 60,
         })
       );
       await dispatch(startTimer());
@@ -118,7 +133,7 @@ export const checkMatch = () => {
     if (choiceOne !== null && choiceTwo !== null) {
       dispatch(levelActions.increaseTurns());
       if (choiceOne.url === choiceTwo.url) {
-        await playSuccess();
+        // await playSuccess();
         dispatch(levelActions.setCardVisibility({ id: choiceOne.id }));
         dispatch(levelActions.setCardVisibility({ id: choiceTwo.id }));
       } else {
@@ -180,13 +195,14 @@ export const startTimer = () => {
       clearInterval(timer);
       timer = setInterval(() => {
         dispatch(levelActions.decrementRemaining());
-      }, 1000);
+      }, 100);
     } catch (e) {
       console.log("Error", e);
     }
   };
 };
 export const stopTimer = () => {
+  console.log("called");
   clearInterval(timer);
 };
 
@@ -207,12 +223,38 @@ export const completeLevel = (level) => {
   return async (dispatch) => {
     stopTimer();
     await dispatch(levelActions.setStopped({ stopped: true }));
-    const { turns, cards } = store.getState().level;
+    const { turns, cards, gameRules } = store.getState().level;
+
     if (_.isFinite(cards[0].length / turns)) {
       let hitRate = (cards[0].length / turns) * 100;
       const { user } = store.getState().auth;
-      const checkIsCompleted = await getCompletedLevelFromDB(db, level.id);
+      if (gameRules?.type === "collection") {
+        await API.graphql({
+          query: createCompletedCollections,
+          variables: {
+            input: { collectionID: level.id, userID: user.sub },
+          },
+        });
+        await dispatch(
+          levelActions.setLevelResult({
+            levelResult: {
+              isCompleted: true,
+              isOpen: true,
+              hitRate: hitRate,
+              type: "collection",
+            },
+          })
+        );
+        await dispatch(
+          contentsActions.completeCollection({
+            id: level.id,
+          })
+        );
+        return;
+      }
       if (hitRate >= level?.for1Stars) {
+        const checkIsCompleted = await getCompletedLevelFromDB(db, level.id);
+        await playSuccess();
         if (checkIsCompleted.length === 0) {
           await API.graphql({
             query: createCompletedLevels,
@@ -250,6 +292,7 @@ export const completeLevel = (level) => {
           })
         );
       } else {
+        await playError();
         await dispatch(
           levelActions.setLevelResult({
             levelResult: {
@@ -260,6 +303,17 @@ export const completeLevel = (level) => {
           })
         );
       }
+    } else {
+      await playError();
+      await dispatch(
+        levelActions.setLevelResult({
+          levelResult: {
+            isCompleted: false,
+            isOpen: true,
+            hitRate: 0,
+          },
+        })
+      );
     }
   };
 };

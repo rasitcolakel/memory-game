@@ -11,13 +11,18 @@ import { openDatabase } from "./store/database";
 import * as Updates from "expo-updates";
 import { setStatusBarHidden } from "expo-status-bar";
 import {
-  createImageTable,
+  cacheAllImages,
   dropImageTableAndRecreate,
+  removeDuplicatedImages,
 } from "./store/database/images";
 import {
   clearCompletedLevels,
   dropCompletedLevelsTableAndRecreate,
 } from "./store/database/completedLevels";
+import {
+  clearCompletedCollections,
+  dropCompletedCollectionsTableAndRecreate,
+} from "./store/database/completedCollections";
 import * as Sentry from "sentry-expo";
 
 LogBox.ignoreLogs([
@@ -28,7 +33,7 @@ LogBox.ignoreLogs([
 Sentry.init({
   dsn: "https://4ee81bf273804fd192577405a9befa35@o1236693.ingest.sentry.io/6386724",
   enableInExpoDevelopment: true,
-  debug: true, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
+  debug: false, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
 });
 
 const db = openDatabase();
@@ -68,6 +73,10 @@ function App() {
     dropImageTableAndRecreate(db);
     dropCompletedLevelsTableAndRecreate(db);
     clearCompletedLevels(db);
+    cacheAllImages(db);
+    removeDuplicatedImages(db);
+    dropCompletedCollectionsTableAndRecreate(db);
+    clearCompletedCollections(db);
   }, []);
 
   // Check the OTA (On the Air) Updates

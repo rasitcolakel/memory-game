@@ -12,8 +12,10 @@ import {
   completeLevel,
   initializeLevel,
 } from "../../../store/actions/level";
+import { useNavigation } from "@react-navigation/native";
 
 export default function GameGrid({ level }) {
+  const navigation = useNavigation();
   const dispatch = useDispatch();
   const { cards, animations, choiceOne, choiceTwo } = useSelector(
     (state) => state.level
@@ -55,7 +57,7 @@ export default function GameGrid({ level }) {
     <View
       flex={1}
       onLayout={(event) => {
-        let {x, y, width, height} = event.nativeEvent.layout;
+        let { x, y, width, height } = event.nativeEvent.layout;
         setContainerLayout({ x, y, width, height });
       }}
     >

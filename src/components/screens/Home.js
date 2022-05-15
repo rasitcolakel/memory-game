@@ -6,12 +6,7 @@ import { getCompletedLevels, getLevels } from "../../../store/actions/levels";
 import { getImages } from "../../../store/actions/image";
 import { FlatList, StatusBar, Text, View } from "native-base";
 import LevelCard from "../UI/LevelCard";
-import { openDatabase } from "../../../store/database";
-import {
-  cacheAllImages,
-  removeDuplicatedImages,
-} from "../../../store/database/images";
-const db = openDatabase();
+
 export default function Home({ navigation }) {
   const windowWidth = Dimensions.get("window").width;
   const cardWidth = 140;
@@ -20,12 +15,6 @@ export default function Home({ navigation }) {
   const { data, loading, nextToken } = useSelector(
     (state) => state.contents.levels
   );
-
-  useEffect(() => {
-    cacheAllImages(db);
-    removeDuplicatedImages(db);
-    dispatch(getCompletedLevels());
-  }, []);
 
   React.useEffect(() => {
     dispatch(getImages(true));
@@ -53,7 +42,6 @@ export default function Home({ navigation }) {
           paddingTop: StatusBar.currentHeight || 0,
         }}
       >
-        <Text>User 123456</Text>
         <FlatList
           data={data}
           renderItem={({ item, index }) => (
@@ -71,6 +59,7 @@ export default function Home({ navigation }) {
           )}
           keyExtractor={(item) => item.id}
           onEndReached={loadMore}
+          onEndReachedThreshold={0.5}
           onRefresh={() => dispatch(getLevels(true))}
           refreshing={loading}
           style={{

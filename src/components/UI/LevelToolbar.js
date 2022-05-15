@@ -6,12 +6,11 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { useDispatch, useSelector } from "react-redux";
 import { levelActions } from "../../../store/slices/level";
 import {
-  initializeLevel,
-  playError,
+  completeLevel,
   replayGame,
   stopGame,
-  stopTimer,
 } from "../../../store/actions/level";
+import { runOnJS } from "react-native-reanimated";
 
 export default function LevelToolbar({ restartGame }) {
   const navigation = useNavigation();
@@ -23,38 +22,45 @@ export default function LevelToolbar({ restartGame }) {
       : 100;
 
   React.useEffect(() => {
+    levelCheck();
+  }, [gameRules.remaining]);
+
+  const levelCheck = () => {
     if (gameRules.remaining === 0) {
-      stopTimer();
-      playError().then(r => console.log("r", r));
+      dispatch(completeLevel());
       dispatch(
         levelActions.setRemaining({
           remaining: null,
         })
       );
     }
-  }, [gameRules.remaining]);
+  };
   return (
     <HStack alignItems="center">
       <TouchableOpacity
         onPress={() => {
           dispatch(levelActions.initializeLevel());
-          navigation.goBack();
+          runOnJS(navigation.goBack());
         }}
       >
         <Icon name="chevron-back" size="10" color="white" as={Ionicons} />
       </TouchableOpacity>
       <HStack flex={1} alignItems="center" px={2}>
-        <Progress
-          size="2xl"
-          value={percentage}
-          _filledTrack={{
-            bg: percentage < 30 ? "yellow.500" : "lime.500",
-          }}
-          flex={1}
-        />
-        <Text color="white" fontSize="2xl" px={2}>
-          {gameRules.remaining || "  "}
-        </Text>
+        {gameRules?.type !== "collection" && (
+          <>
+            <Progress
+              size="2xl"
+              value={percentage}
+              _filledTrack={{
+                bg: percentage < 30 ? "yellow.500" : "lime.500",
+              }}
+              flex={1}
+            />
+            <Text color="white" fontSize="2xl" px={2}>
+              {gameRules.remaining || "  "}
+            </Text>
+          </>
+        )}
       </HStack>
       <TouchableOpacity
         disabled={gameRules.remaining === null}

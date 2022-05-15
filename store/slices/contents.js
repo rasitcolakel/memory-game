@@ -250,6 +250,28 @@ const slice = createSlice({
         return level;
       });
     },
+    setCompletedCollections(state, actions) {
+      if (state.collections.data === null) state.collections.data = [];
+      state.collections.data = state.collections.data.map((collection) => {
+        let find = actions.payload.data.find(
+          (item) => item.collection_id === collection.id
+        );
+        if (find) {
+          collection.completed = { ...find };
+        } else {
+          collection.completed = null;
+        }
+        return collection;
+      });
+    },
+    completeCollection(state, actions) {
+      state.collections.data = state.collections.data.map((collection) => {
+        if (collection.id === actions.payload.id) {
+          collection.completed = true;
+        }
+        return collection;
+      });
+    },
   },
 });
 

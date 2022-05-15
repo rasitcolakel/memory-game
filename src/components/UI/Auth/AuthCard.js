@@ -15,19 +15,19 @@ export default function AuthCard({ children }) {
           flexGrow: 1,
           justifyContent: "center",
           width: "100%",
+          alignItems: "center",
         }}
       >
-        <Center flex={1} style={{ marginVertical: "10%" }}>
-          <Box
-            width={orientation === "LANDSCAPE" ? "50%" : "90%"}
-            px="5"
-            bg="white"
-            rounded="2xl"
-            py="5"
-          >
-            {children}
-          </Box>
-        </Center>
+        <Box
+          width={orientation === "LANDSCAPE" ? "50%" : "90%"}
+          px="5"
+          bg="white"
+          rounded="2xl"
+          py="5"
+          my="10"
+        >
+          {children}
+        </Box>
       </ScrollView>
     </AppContainer>
   );

@@ -47,7 +47,13 @@ export default function LevelResult({ level }) {
           }}
         >
           <Text fontSize="xl">
-            {levelResult?.isCompleted ? "Level Completed" : "Level Failed"}
+            {levelResult?.isCompleted
+              ? `${
+                  levelResult?.type !== "collection" ? "Level" : "Collection"
+                } Completed`
+              : `${
+                  levelResult?.type !== "collection" ? "Level" : "Collection"
+                } Failed`}
           </Text>
           <IconButton
             size="lg"
@@ -57,7 +63,7 @@ export default function LevelResult({ level }) {
               name: "close",
               color: "amber.500",
             }}
-            onPress={() => dispatch(initializeLevel(level))}
+            onPress={() => navigation.goBack()}
           />
         </AlertDialog.Header>
         <AlertDialog.Body>
@@ -67,39 +73,41 @@ export default function LevelResult({ level }) {
             rate={levelResult?.hitRate}
           />
         </AlertDialog.Body>
-        <AlertDialog.Footer
-          style={{
-            justifyContent: levelResult?.isCompleted
-              ? "space-between"
-              : "center",
-          }}
-        >
-          <IconButton
-            size="sm"
-            _icon={{
-              as: Ionicons,
-              name: "refresh",
-              color: "amber.500",
+        {levelResult?.type !== "collection" && (
+          <AlertDialog.Footer
+            style={{
+              justifyContent: levelResult?.isCompleted
+                ? "space-between"
+                : "center",
             }}
-            onPress={() => dispatch(initializeLevel(level))}
-          />
-          {levelResult?.isCompleted && (
+          >
             <IconButton
               size="sm"
               _icon={{
-                as: AntDesign,
-                name: "forward",
-                color: !nextLevel ? "gray.300" : "amber.500",
+                as: Ionicons,
+                name: "refresh",
+                color: "amber.500",
               }}
-              disabled={!nextLevel}
-              onPress={() => {
-                if (nextLevel) {
-                  navigation.setParams({ level: nextLevel });
-                }
-              }}
+              onPress={() => dispatch(initializeLevel(level))}
             />
-          )}
-        </AlertDialog.Footer>
+            {levelResult?.isCompleted && (
+              <IconButton
+                size="sm"
+                _icon={{
+                  as: AntDesign,
+                  name: "forward",
+                  color: !nextLevel ? "gray.300" : "amber.500",
+                }}
+                disabled={!nextLevel}
+                onPress={() => {
+                  if (nextLevel) {
+                    navigation.setParams({ level: nextLevel });
+                  }
+                }}
+              />
+            )}
+          </AlertDialog.Footer>
+        )}
       </AlertDialog.Content>
     </View>
   );
