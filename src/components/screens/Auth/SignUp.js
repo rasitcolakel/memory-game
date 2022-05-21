@@ -14,11 +14,11 @@ export default function Login({ navigation }) {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      name: "rast",
-      email: "rasitcolakel@hotmail.com",
-      username: "raseke",
-      password: "12345678",
-      confirmPassword: "12345678",
+      name: "",
+      email: "",
+      username: "",
+      password: "",
+      confirmPassword: "",
     },
   });
   const signInPressed = (data) => {

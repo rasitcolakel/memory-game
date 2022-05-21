@@ -11,7 +11,6 @@ import {
 } from "../../src/graphql/mutations";
 import jwtDecode from "jwt-decode";
 import store from "../index";
-
 export const login = (params, navigation) => {
   return async (dispatch) => {
     dispatch(uiActions.setLoading({ loading: true }));
@@ -368,5 +367,51 @@ export const resetPushToken = () => {
       );
     }
     dispatch(uiActions.setLoading({ loading: false }));
+  };
+};
+
+export const changeUserPassword = ({ oldPassword, newPassword }) => {
+  return async (dispatch) => {
+    dispatch(uiActions.setLoading({ loading: true }));
+    try {
+      const currentUser = await Auth.currentAuthenticatedUser();
+      if (currentUser) {
+        await Auth.changePassword(currentUser, oldPassword, newPassword);
+        await dispatch(
+          uiActions.showToast({
+            toast: {
+              title: "Success",
+              status: "success",
+              description: "Password changed successfully",
+            },
+          })
+        );
+        await dispatch(resetChangePasswordState());
+      }
+    } catch (e) {
+      console.log("error", e);
+      dispatch(
+        uiActions.showToast({
+          toast: {
+            title: "Error",
+            status: "error",
+            description: e.message,
+          },
+        })
+      );
+    }
+    await dispatch(uiActions.setLoading({ loading: false }));
+  };
+};
+
+export const resetChangePasswordState = () => {
+  return async (dispatch) => {
+    dispatch(authActions.resetChangePasswordState());
+  };
+};
+
+export const setChangePasswordState = (state) => {
+  return async (dispatch) => {
+    dispatch(authActions.setChangePasswordState(state));
   };
 };

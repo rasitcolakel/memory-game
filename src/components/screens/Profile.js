@@ -7,17 +7,20 @@ import {
   Center,
   HStack,
   Icon,
+  IconButton,
   ScrollView,
   Switch,
   Text,
-  VStack,
 } from "native-base";
 import {
   getUserFromDB,
   resetPushToken,
+  setChangePasswordState,
   setPushToken,
 } from "../../../store/actions/auth";
 import { Alert } from "react-native";
+import { AntDesign } from "@expo/vector-icons";
+import { ChangePassword } from "../UI/Profile/ChangePassword";
 
 export default function Profile() {
   const { user, pushToken } = useSelector((state) => state.auth);
@@ -26,10 +29,15 @@ export default function Profile() {
   React.useEffect(() => {
     dispatch(getUserFromDB());
   }, []);
-  console.log("userDetails", pushToken, userDetails);
+
+  const openChangePasswordModal = () => {
+    dispatch(setChangePasswordState({ visible: true }));
+  };
+
   return (
     <AppContainer>
       <Center w="full" flex={1}>
+        <ChangePassword />
         <Box
           flex={1}
           bg="gray.50"
@@ -125,6 +133,22 @@ export default function Profile() {
                         dispatch(setPushToken(pushToken));
                       }
                     }}
+                  />
+                </HStack>
+              </BorderedCenter>
+              <BorderedCenter>
+                <HStack
+                  alignItems="center"
+                  w="full"
+                  justifyContent="space-between"
+                  flex={1}
+                >
+                  <Text fontSize="sm" fontWeight="bold">
+                    Change Password:
+                  </Text>
+                  <IconButton
+                    onPress={openChangePasswordModal}
+                    icon={<Icon as={AntDesign} name="edit" />}
                   />
                 </HStack>
               </BorderedCenter>

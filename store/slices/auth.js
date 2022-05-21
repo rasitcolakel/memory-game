@@ -6,6 +6,13 @@ let initialState = {
   user: null,
   isLogged: null,
   pushToken: null,
+  changePassword: {
+    visible: false,
+    loading: false,
+    oldPassword: "",
+    newPassword: "",
+    confirmNewPassword: "",
+  },
 };
 
 const slice = createSlice({
@@ -32,6 +39,17 @@ const slice = createSlice({
       state.user = {
         ...state.user,
         userDetails: { ...action.payload.userDetails },
+      };
+    },
+    resetChangePasswordState(state) {
+      state.changePassword = {
+        ...initialState.changePassword,
+      };
+    },
+    setChangePasswordState(state, action) {
+      state.changePassword = {
+        ...state.changePassword,
+        ...action.payload,
       };
     },
   },

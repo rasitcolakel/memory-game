@@ -28,6 +28,7 @@ import * as Sentry from "sentry-expo";
 LogBox.ignoreLogs([
   "NativeBase:",
   "Remote debugger is in a background tab which may cause apps to perform slowly. Fix this by foregrounding the tab (or opening it in a separate window).",
+  "When server rendering, you must wrap your application in an <SSRProvider> to ensure consistent ids are generated between the client and server.",
 ]);
 
 Sentry.init({

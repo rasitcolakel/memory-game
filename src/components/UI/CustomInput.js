@@ -14,13 +14,14 @@ export default function CustomInput(props) {
       control={props.control}
       name={props.name}
       rules={props.rules}
-      render={({ field: { onChange, onBlur, value } }) => (
+      render={({ field: { onChange, onBlur, value } }, ref) => (
         <FormControl>
           <Input
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
             my="2"
+            ref={ref}
             {...props.inputProps}
           />
           {props?.errors?.type && (
