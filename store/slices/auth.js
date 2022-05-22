@@ -8,10 +8,9 @@ let initialState = {
   pushToken: null,
   changePassword: {
     visible: false,
-    loading: false,
-    oldPassword: "",
-    newPassword: "",
-    confirmNewPassword: "",
+  },
+  editProfile: {
+    visible: false,
   },
 };
 
@@ -49,6 +48,17 @@ const slice = createSlice({
     setChangePasswordState(state, action) {
       state.changePassword = {
         ...state.changePassword,
+        ...action.payload,
+      };
+    },
+    resetEditProfileState(state) {
+      state.editProfile = {
+        ...initialState.editProfile,
+      };
+    },
+    setEditProfileState(state, action) {
+      state.editProfile = {
+        ...state.editProfile,
         ...action.payload,
       };
     },
