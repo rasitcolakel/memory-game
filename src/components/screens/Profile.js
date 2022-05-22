@@ -16,11 +16,13 @@ import {
   getUserFromDB,
   resetPushToken,
   setChangePasswordState,
+  setEditProfileState,
   setPushToken,
 } from "../../../store/actions/auth";
 import { Alert } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { ChangePassword } from "../UI/Profile/ChangePassword";
+import { EditProfile } from "../UI/Profile/EditProfile";
 
 export default function Profile() {
   const { user, pushToken } = useSelector((state) => state.auth);
@@ -34,10 +36,15 @@ export default function Profile() {
     dispatch(setChangePasswordState({ visible: true }));
   };
 
+  const openEditProfileModal = () => {
+    dispatch(setEditProfileState({ visible: true }));
+  };
+
   return (
     <AppContainer>
       <Center w="full" flex={1}>
         <ChangePassword />
+        <EditProfile />
         <Box
           flex={1}
           bg="gray.50"
@@ -58,7 +65,7 @@ export default function Profile() {
                     fontSize: "3xl",
                   }}
                 >
-                  {user.name.slice(0, 2).toUpperCase()}
+                  {(userDetails.name || user.name).slice(0, 2).toUpperCase()}
                 </Avatar>
                 <Text
                   fontSize={{
@@ -66,7 +73,7 @@ export default function Profile() {
                     lg: "2xl",
                   }}
                 >
-                  {user.name}
+                  {userDetails.name || user.name}
                 </Text>
               </BorderedCenter>
               <BorderedCenter>
@@ -148,7 +155,23 @@ export default function Profile() {
                   </Text>
                   <IconButton
                     onPress={openChangePasswordModal}
-                    icon={<Icon as={AntDesign} name="edit" />}
+                    icon={<Icon as={AntDesign} name="edit" size="sm" />}
+                  />
+                </HStack>
+              </BorderedCenter>
+              <BorderedCenter>
+                <HStack
+                  alignItems="center"
+                  w="full"
+                  justifyContent="space-between"
+                  flex={1}
+                >
+                  <Text fontSize="sm" fontWeight="bold">
+                    Edit Profile:
+                  </Text>
+                  <IconButton
+                    onPress={openEditProfileModal}
+                    icon={<Icon as={AntDesign} name="edit" size="sm" />}
                   />
                 </HStack>
               </BorderedCenter>

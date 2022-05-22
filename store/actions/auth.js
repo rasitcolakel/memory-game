@@ -377,16 +377,16 @@ export const changeUserPassword = ({ oldPassword, newPassword }) => {
       const currentUser = await Auth.currentAuthenticatedUser();
       if (currentUser) {
         await Auth.changePassword(currentUser, oldPassword, newPassword);
-        await dispatch(
-          uiActions.showToast({
-            toast: {
-              title: "Success",
-              status: "success",
-              description: "Password changed successfully",
-            },
-          })
-        );
         await dispatch(resetChangePasswordState());
+        // await dispatch(
+        //   uiActions.showToast({
+        //     toast: {
+        //       title: "Success",
+        //       status: "success",
+        //       description: "Password changed successfully",
+        //     },
+        //   })
+        // );
       }
     } catch (e) {
       console.log("error", e);
@@ -413,5 +413,63 @@ export const resetChangePasswordState = () => {
 export const setChangePasswordState = (state) => {
   return async (dispatch) => {
     dispatch(authActions.setChangePasswordState(state));
+  };
+};
+
+export const editProfileAction = ({ name }) => {
+  return async (dispatch) => {
+    dispatch(uiActions.setLoading({ loading: true }));
+    try {
+      const currentUser = await Auth.currentAuthenticatedUser();
+      if (currentUser) {
+        await Auth.updateUserAttributes(currentUser, { name });
+
+        const { user } = store.getState().auth;
+        let input = {
+          name,
+          id: user.sub,
+        };
+        await API.graphql(
+          graphqlOperation(updateUser, {
+            input,
+          })
+        );
+        await dispatch(resetEditProfileState());
+        await dispatch(getUserFromDB());
+        // await dispatch(
+        //   uiActions.showToast({
+        //     toast: {
+        //       title: "Success",
+        //       status: "success",
+        //       description: "Profile edited successfully",
+        //     },
+        //   })
+        // );
+      }
+    } catch (e) {
+      console.log("error", e);
+      dispatch(
+        uiActions.showToast({
+          toast: {
+            title: "Error",
+            status: "error",
+            description: e.message,
+          },
+        })
+      );
+    }
+    await dispatch(uiActions.setLoading({ loading: false }));
+  };
+};
+
+export const resetEditProfileState = () => {
+  return async (dispatch) => {
+    dispatch(authActions.resetEditProfileState());
+  };
+};
+
+export const setEditProfileState = (state) => {
+  return async (dispatch) => {
+    dispatch(authActions.setEditProfileState(state));
   };
 };
