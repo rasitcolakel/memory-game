@@ -14,9 +14,7 @@ export const ChangePassword = () => {
   const closeModal = () => {
     dispatch(resetChangePasswordState());
   };
-  const handleChangePassword = () => {
-    dispatch(setChangePassword());
-  };
+
   const {
     register,
     watch,
@@ -25,9 +23,9 @@ export const ChangePassword = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      oldPassword: "1234567812",
-      newPassword: "1234567812",
-      confirmNewPassword: "1234567812",
+      oldPassword: "",
+      newPassword: "",
+      confirmNewPassword: "",
     },
   });
   const submit = async (data) => {
