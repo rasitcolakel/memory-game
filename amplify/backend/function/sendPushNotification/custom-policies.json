@@ -1,0 +1,15 @@
+[
+  {
+    "Action": [
+      "dynamodb:GetItem",
+      "dynamodb:PutItem",
+      "dynamodb:DeleteItem",
+      "dynamodb:UpdateItem",
+      "dynamodb:Scan"
+    ],
+    "Resource": [
+      "arn:aws:dynamodb:eu-central-1:002552937608:table/User-4ca26h2dhzeftirn6f27cwhy5u-staging",
+      "arn:aws:dynamodb:eu-central-1:002552937608:table/PushToken-4ca26h2dhzeftirn6f27cwhy5u-staging"
+    ]
+  }
+]

@@ -166,3 +166,21 @@ type CompletedCollections
   user: User @hasOne(fields: ["userID"])
   rate: Float
 }
+
+type Mutation {
+  customCreateCollection(
+    title: String!
+    userID: ID!
+    sendPushNotification: Boolean!
+  ): String
+    @function(name: "sendPushNotification-${env}")
+    @function(name: "sendPushNotificationResolver-${env}")
+  customCreateLevel(
+    number: Int!
+    gameRules: AWSJSON!
+    userID: ID!
+    sendPushNotification: Boolean!
+  ): String
+    @function(name: "sendPushNotification-${env}")
+    @function(name: "sendPushNotificationResolver-${env}")
+}

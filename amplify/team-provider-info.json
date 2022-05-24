@@ -19,6 +19,14 @@
         "addUserToUsersGroup": {
           "deploymentBucketName": "amplify-memorygame-staging-105340-deployment",
           "s3Key": "amplify-builds/addUserToUsersGroup-6131702b3630324f477a-build.zip"
+        },
+        "sendPushNotification": {
+          "deploymentBucketName": "amplify-memorygame-staging-105340-deployment",
+          "s3Key": "amplify-builds/sendPushNotification-4d63643430587832697a-build.zip"
+        },
+        "sendPushNotificationResolver": {
+          "deploymentBucketName": "amplify-memorygame-staging-105340-deployment",
+          "s3Key": "amplify-builds/sendPushNotificationResolver-33486c3057315643486c-build.zip"
         }
       }
     }

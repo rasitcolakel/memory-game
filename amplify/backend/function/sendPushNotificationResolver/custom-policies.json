@@ -1,0 +1,12 @@
+[
+  {
+    "Action": [
+      "dynamodb:UpdateItem",
+      "dynamodb:PutItem"
+    ],
+    "Resource": [
+      "arn:aws:dynamodb:eu-central-1:002552937608:table/Levels-4ca26h2dhzeftirn6f27cwhy5u-staging",
+      "arn:aws:dynamodb:eu-central-1:002552937608:table/Collections-4ca26h2dhzeftirn6f27cwhy5u-staging"
+    ]
+  }
+]
