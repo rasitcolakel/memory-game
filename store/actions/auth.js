@@ -52,7 +52,10 @@ export const register = (params, navigation) => {
   return async (dispatch) => {
     dispatch(uiActions.setLoading({ loading: true }));
     try {
-      let { username, password, email, name } = params;
+      let { username, password, confirmPassword, email, name } = params;
+      if (password !== confirmPassword) {
+        throw new Error("Passwords do not match");
+      }
       const { user } = await Auth.signUp({
         username,
         password,
@@ -471,5 +474,80 @@ export const resetEditProfileState = () => {
 export const setEditProfileState = (state) => {
   return async (dispatch) => {
     dispatch(authActions.setEditProfileState(state));
+  };
+};
+
+export const forgotPassword = (data, navigation) => {
+  return async (dispatch) => {
+    dispatch(uiActions.setLoading({ loading: true }));
+    try {
+      await Auth.forgotPassword(data.username?.trim()).then(() => {
+        navigation.navigate("ForgotPasswordSubmit", {
+          username: data.username,
+        });
+      });
+
+      await dispatch(
+        uiActions.showToast({
+          toast: {
+            title: "Success",
+            status: "success",
+            description:
+              "We have sent you an email with a verification code to reset your password",
+          },
+        })
+      );
+    } catch (e) {
+      console.log("error", e);
+      dispatch(
+        uiActions.showToast({
+          toast: {
+            title: "Error",
+            status: "error",
+            description: e.message,
+          },
+        })
+      );
+    }
+    await dispatch(uiActions.setLoading({ loading: false }));
+  };
+};
+
+export const forgotPasswordSubmit = (data, navigation) => {
+  return async (dispatch) => {
+    dispatch(uiActions.setLoading({ loading: true }));
+    try {
+      let { username, password, confirmPassword, code } = data;
+
+      if (password !== confirmPassword) {
+        throw new Error("Passwords do not match");
+      }
+      await Auth.forgotPasswordSubmit(username?.trim(), code, password).then(
+        () => {
+          navigation.navigate("Login");
+        }
+      );
+      await dispatch(
+        uiActions.showToast({
+          toast: {
+            title: "Success",
+            status: "success",
+            description: "Password changed successfully you can login now",
+          },
+        })
+      );
+    } catch (e) {
+      console.log("error", e);
+      dispatch(
+        uiActions.showToast({
+          toast: {
+            title: "Error",
+            status: "error",
+            description: e.message,
+          },
+        })
+      );
+    }
+    await dispatch(uiActions.setLoading({ loading: false }));
   };
 };

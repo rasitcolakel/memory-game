@@ -11,6 +11,7 @@ import {
   ScrollView,
   Switch,
   Text,
+  Button,
 } from "native-base";
 import {
   getUserFromDB,
@@ -18,6 +19,7 @@ import {
   setChangePasswordState,
   setEditProfileState,
   setPushToken,
+  signOut,
 } from "../../../store/actions/auth";
 import { Alert } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
@@ -52,7 +54,7 @@ export default function Profile() {
           rounded="2xl"
           borderWidth={1}
           borderColor="gray.300"
-          w={"2/5"}
+          w={"3/5"}
         >
           <ScrollView>
             <Center flex={1} w="full" p={3}>
@@ -65,7 +67,7 @@ export default function Profile() {
                     fontSize: "3xl",
                   }}
                 >
-                  {(userDetails.name || user.name).slice(0, 2).toUpperCase()}
+                  {(userDetails?.name || user.name).slice(0, 2).toUpperCase()}
                 </Avatar>
                 <Text
                   fontSize={{
@@ -73,7 +75,7 @@ export default function Profile() {
                     lg: "2xl",
                   }}
                 >
-                  {userDetails.name || user.name}
+                  {userDetails?.name || user.name}
                 </Text>
               </BorderedCenter>
               <BorderedCenter>
@@ -175,6 +177,14 @@ export default function Profile() {
                   />
                 </HStack>
               </BorderedCenter>
+              <Button
+                w="full"
+                pt="2"
+                bg="red.500"
+                onPress={() => dispatch(signOut())}
+              >
+                Logout
+              </Button>
             </Center>
           </ScrollView>
         </Box>

@@ -17,7 +17,6 @@ const DrawerContent = (props) => {
   const dispatch = useDispatch();
   return (
     <DrawerContentScrollView {...props}>
-      <DrawerItem label="Help" />
       <DrawerItem label="Logout" onPress={() => dispatch(signOut())} />
     </DrawerContentScrollView>
   );

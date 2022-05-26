@@ -12,7 +12,7 @@ export default function CollectionCard({ collection }) {
     getCoverImage(collection.id);
   }, []);
   const getCoverImage = async () => {
-    let image = collection?.images?.items[0].image;
+    let image = collection?.images?.items[0]?.image;
     if (image) {
       getImageFromCache(db, image.url).then((imageData) => {
         setImage(imageData);

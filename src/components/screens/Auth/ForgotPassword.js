@@ -3,10 +3,10 @@ import { Button, Heading } from "native-base";
 import AuthCard from "../../UI/Auth/AuthCard";
 import { useForm } from "react-hook-form";
 import CustomInput from "../../UI/CustomInput";
-import { login } from "../../../../store/actions/auth";
+import { forgotPassword, login } from "../../../../store/actions/auth";
 import { useDispatch } from "react-redux";
 
-export default function Login({ navigation }) {
+export default function ForgotPassword({ navigation }) {
   const dispatch = useDispatch();
   const {
     control,
@@ -15,17 +15,16 @@ export default function Login({ navigation }) {
   } = useForm({
     defaultValues: {
       username: "",
-      password: "",
     },
   });
   const loginPressed = async (data) => {
-    dispatch(login(data, navigation));
+    dispatch(forgotPassword(data, navigation));
   };
 
   return (
     <AuthCard>
       <Heading alignSelf="center" py="5" pb="7">
-        Log In
+        Reset Password
       </Heading>
       <CustomInput
         control={control}
@@ -44,45 +43,16 @@ export default function Login({ navigation }) {
           },
         }}
       />
-      <CustomInput
-        control={control}
-        inputProps={{
-          placeholder: "Password",
-          type: "password",
-          autoCapitalize: "none",
-        }}
-        name="password"
-        rules={{
-          required: true,
-        }}
-        errors={{
-          type: errors?.password?.type,
-          messages: {
-            required: "This field is required",
-          },
-        }}
-      />
-      <Button
-        variant="unstyled"
-        alignSelf="flex-end"
-        _text={{
-          color: "gray.400",
-        }}
-        px="0"
-        onPress={() => navigation.navigate("ForgotPassword")}
-        size="sm"
-      >
-        Forgot Password?
-      </Button>
+
       <Button onPress={handleSubmit(loginPressed)} my="2">
-        Login
+        Reset
       </Button>
       <Button
         variant="link"
-        onPress={() => navigation.navigate("SignUp")}
+        onPress={() => navigation.navigate("Login")}
         my="2"
       >
-        Do not have an account? Create one
+        Back to Login
       </Button>
     </AuthCard>
   );
